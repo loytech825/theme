@@ -4,7 +4,7 @@ This program is designed so you have to only define your color theme once, and a
 
 ## Usage
 
-theme [options] \<color-file-name> \<output-dir>
+`theme [options] <color-file-name> <output-dir>`
 
 First argument that doesn't belong to any option goes to \<color-file-name>, the second to \<output-dir>. \<output-dir> defaults to local config folder, checks are performed in order:
  1. XDG_CONFIG_HOME
@@ -33,7 +33,7 @@ You can use [variables](#variables) in the fields. Due to the current implementa
 
 Default values will be provided both when the config is generated and if a field is missing:
 
-|Variable|Default value|
+|Name|Default value|
 |----|----|
 |`path`|`${output_dir}/${section_name}`|
 |`format`|`${color_name} #${color_value}`|
@@ -70,6 +70,10 @@ line3"
 ```
 Note that if the parentheses aren't closed, it will treat the rest of the file as the same value. The value inludes leading space in each line.
 
+### Comments
+
+Comments are single line, initiated by `#`
+
 ### Sections
 Sections are defined with a line enclosed in `[ ]`
 ```
@@ -102,7 +106,7 @@ The following is a list of default, globally available variables:
 Clone the repository
 
 ```bash
-git clone <>
+git clone https://github.com/loytech825/theme.git
 ```
 
 Go into the repo folder and create a folder called build, and go into build
