@@ -102,12 +102,17 @@ In the color config file, the sections override the default colors.
 
 When referencing a variable, the syntax `${var_name}` is used. When referencing colors, `${color0}` is equivalent to `${black}` and so on for the 15 ANSI colors. The bright variants are referents with `${bright_black}`. The variables DO NOT HAVE to be defined before they are referenced.
 
-The following is a list of default, globally available variables:
+Variables are split into two types:
+- Config variables only available in the config file
+- Color variables only available in the color config
 
-| Variable name | Description |
+If a variable substitution can't be found, it is left unchanged
+
+| Config variables | Description |
 |---------------|-------------|
 |`section_name`|the name of the section in which the variable is defined|
 |`output_dir`|the path of the output directory|
+| Color variables | |
 |`color_name`|the name of the color (used in format) — the name is the same as the name of the field, unless the field is `color0` - `color15` in which case the name is gotten from the id|
 |`color_id` |the id of the color (0-255) — only available for fields `color0` -`color255` and the standard 15 ANSI colors|
 |`color_value`| the value of the field
