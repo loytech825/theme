@@ -13,6 +13,8 @@ This program is designed so you have to only define your color theme once, and a
     1. [Variables](#variables)
 1. [Installation](#installation)
 
+---
+
 ## Usage
 
 `theme [options] <color-file-name> <output-dir>`
