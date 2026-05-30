@@ -112,7 +112,9 @@ If a variable substitution can't be found, it is left unchanged
 |---------------|-------------|
 |`section_name`|the name of the section in which the variable is defined|
 |`output_dir`|the path of the output directory|
-| Color variables | |
+
+| Color variables | Description |
+|-----|-----|
 |`color_name`|the name of the color (used in format) — the name is the same as the name of the field, unless the field is `color0` - `color15` in which case the name is gotten from the id|
 |`color_id` |the id of the color (0-255) — only available for fields `color0` -`color255` and the standard 15 ANSI colors|
 |`color_value`| the value of the field
