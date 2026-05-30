@@ -2,6 +2,17 @@
 
 This program is designed so you have to only define your color theme once, and automatically apply it to all your programs
 
+## Contents
+
+1.  [Usage](#usage)
+1.  [Config file](#config-file)
+1.  [Color config](#color-config)
+1.  [Syntax](#syntax)
+    1. [Comments](#comments)
+    1. [Sections](#sections)
+    1. [Variables](#variables)
+1. [Installation](#installation)
+
 ## Usage
 
 `theme [options] <color-file-name> <output-dir>`
