@@ -34,8 +34,10 @@ require("hyprland-colors")
 Then set this file as the path inside the [theme config file](#config-file):
 
 ```conf
+...
 [hyprland]
 path = "path/to/hprland-colors.lua"
+...
 ```
 
 ---

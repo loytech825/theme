@@ -2,3 +2,4 @@
 build/**
 test.conf
 test
+out
