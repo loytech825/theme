@@ -81,3 +81,22 @@ int get_color_id(const std::string& color)
 
     return -1;
 }
+
+std::vector<std::string> split_string(const std::string &input, const std::string &token)
+{
+
+    std::vector<std::string> out;
+
+    int pos = -1;
+    int last_pos = 0;
+    while((pos = input.find(token, pos+1)) != std::string::npos)
+    {
+        out.push_back(input.substr(last_pos, pos-last_pos));
+        last_pos = pos+1;
+    }
+
+    //last line
+    out.push_back(input.substr(last_pos));
+
+    return out;
+}
