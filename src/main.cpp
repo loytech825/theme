@@ -20,12 +20,8 @@ std::string color_file{""};
 //TODO: literal files (copy and paste entire file if its premade (like vscode themes))
 //TODO: proper color parsing so RGBA is supported
 
-//TODO: explain config_format in readme
-// if a line contains ${var_name}, the whole line will get treated as a format
-// if a line is only a key (eg. red, color_13), the line will be parsed through the formatter again
-// with the line as the key
-
-//TODO: explain mode in readme
+//TODO split readme files
+//TODO add ${key=15} for config formats
 
 namespace fs = std::filesystem;
 
@@ -282,15 +278,15 @@ void print_cfg(const ConfigSection& section_config, const ConfigSection& global_
             std::cout << "calling with col_seciton from main.cpp\n";
             std::string out_line = insert_variables(line, col_section);
 
-            //if line contains variables even after replacing we comment it
+            //if variables couldn't be replace we skip the line to avoid random stuff
             if(out_line.find("${") != std::string::npos)
-                out_line = comment + out_line;
+                out_line = "";
 
             stream << out_line << "\n";
         }
         else
         {
-            stream << comment << " Missing entry - " << line << "\n";
+            stream << line << "\n";
         }
     }
 
@@ -307,7 +303,7 @@ void print_cfg(const ConfigSection& section_config, const ConfigSection& global_
         for(const auto [k, v] : col_section)
         {
             if(std::find(already_printed.begin(), already_printed.end(), k) != already_printed.end()) continue;
-            stream << format_value(format, id_format, k, v);
+            stream << format_value(format, id_format, k, v) << "\n";
         }
     }
 }

@@ -1,0 +1,62 @@
+# Config
+
+Config files are split into [Configuration files](#configuration-files) and [Color files](#color-files). The former specify global settings, while the latter defines the colors. The color file is what you must pass to the function when calling. [Syntax](#syntax) is explained further down.
+
+## Configuration files
+These specify the behaviour of the parser. Any section created will generate an additional config file, even if no fields are defined. The following fields are allowed, with defaults provided if missing.
+
+| Name |Description|Default|
+|------|-----------|-------|
+|`path`|Where the color file will be generated. If a directory, the program will create a file called colors.conf inside, if a file, it will put the contents there|`${output_dir}/${section_name}`|
+|`format`|What color definition should look like|`${color_name} #${color_value}`|
+|`format-id`|If the color has an id (eg. `bright_red` or `color46`), this format will be used instead|`${color_name} #${color_value}`|
+|`comment`|The comment initialization string (eg. `--` in lua or `#` in python)|`#`|
+|`config_format`| Specifies what the output file will look like, see examples| too long to fit here, TBA |
+|`mode`| Can be either `modify-add` or `modify-ignore`. The former overrides keys `config_format` and adds anything remaining, the former ignores fields that are not in `config_format`|`modify-add`|
+
+Variables available
+
+|Name|Value|
+|-|-|
+|`output_dir`|the argument `-o` if provided, the default config path otherwise|
+| `section_name`|the name of the current section |
+| `color_name`[^1]| name of the color|
+| `color_id`[^1]| if color has id, its id, otherwise same as `color_name`|
+| `color_value`[^1]| the value of the color, `RRGGBB`|
+
+[^1]: wont get parset but will be used in `format`
+
+
+
+
+
+## Color files
+
+These files provide colors to parse.
+Section names must be the same as in [config](#configuration-files), any additionals wont be parsed.
+Color of the type `colorXXX` where `XXX` is a number from 0 to 255 and standard ANDI colors (`black`, `bright_green`, ...) will have an id. Colors with an id 0 - 15 are equivalent to ANSI colors, and will have such as `color_name`. If `mode` is set to `modify-add`, all the fields will be outputted, otherwise only those whose `key` matches the first word in a line of `config_format` (excluding `"`).
+
+## Syntax
+
+### Values
+Setting values takes the format `key = value`. Leading and trailing spaces for the `key` and `value` are cut.
+
+Example:
+`red = #123456` 
+
+Values can be put into quotes (`"`). This way they can take up multiple lines
+
+Ex:
+```conf
+format = "# comment line
+${color_name} = #${color_value}"
+```
+
+### Sections
+Sections are started by typing `[section-name]` on an empty line. Any field after a section initializer will be section-specific. Sections may not be re-initialized. Without specifying a section, everything will be global.
+
+### Variables
+Variables can be referenced using `${variable_name}`. Any already defined field can be used as a variable, as well as the default variables provided in [config](#configuration-files) and [color](#color-files) files.
+
+## Examples
+Example configs are provided in [examples](examples/).
