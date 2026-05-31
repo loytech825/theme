@@ -63,19 +63,27 @@ void process_colors(std::unordered_map<std::string, std::string>& color_map)
 
     //first loop changes color names to ids
     //and colors of type #rrggbb to rrggbb
+
+    //we need this so we dont edit what we loop through
+    auto editable_map = color_map;
+
     for(auto& [k, v] : color_map)
     {
+        //std::cout << k << ":\t " << v << "\n";
         if( int id = get_color_id(k); id != -1)
         {
+            //std::cout << "Replacing " << k << " with " << id << "\n"; 
             //this code changes a key in the map
-            auto nh = color_map.extract(k);
+            auto nh = editable_map.extract(k);
             nh.key() = std::to_string(id);
-            color_map.insert(std::move(nh));
+            editable_map.insert(std::move(nh));
         }
 
         //is v is of type #rrggbb or #rrggbbaa strip #
-        if(v.starts_with("#") && (v.length() == 7 || v.length() == 9))
+        //std::cout << v.find("${") << "\t";
+        if(v.starts_with("#") && (v.length() == 7 || v.length() == 9) && (v.find("${") == std::string::npos))
         {
+            //std::cout << "v:" << v << "\n";
             v = v.substr(1);
         }
     }
@@ -83,31 +91,11 @@ void process_colors(std::unordered_map<std::string, std::string>& color_map)
     //second loop replaces variables
     //this is separate because if a default color refers to a variable that gets
     //overridden in a section, it wont work
-
-    for(auto& [k, v] : color_map){
+    //auto map = color_map;
+    for(auto& [k, v] : editable_map){
         //parse inserted values
-        //find opening bracket ${ 
-        int begin = 0;
-        while((begin = v.find("${")) != std::string::npos)
-        {
-            //std::cout << begin << "\n";
-            //loop through closing brackets until one right after the opening is found
-            int end = -1;
-            while((end = v.find("}", end+1)) != std::string::npos && end < (begin+2)) {}
-            if(end == std::string::npos) continue;
-
-            //holds whats between ${ and }
-            std::string v_name = v.substr(begin+2, end-begin-2);
-
-            //holds the same as v_name unless v_name has id, in which case it holds the id
-            std::string var_name = v_name;
-            if(int id = get_color_id(v_name); id != -1) v_name = std::to_string(id);
-
-            //replace the token
-            if(color_map.contains(v_name))
-                v = replace_all(v, "${"+var_name+"}", color_map[v_name]);
-            else 
-                v = replace_all(v, "${"+var_name+"}", "");
-        }
+        v = insert_variables(v, editable_map);
     }
+
+    color_map = editable_map;
 }

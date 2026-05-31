@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
 
 
     fs::path config_dir{get_config_dir()};
-    fs::path config_path{config_dir / "themer/config.conf"};
+    fs::path config_path{config_dir / "theme/config.conf"};
 
     create_conf(config_path);
 
@@ -117,6 +117,7 @@ int main(int argc, char *argv[])
         if(sect.name != "default")
         {
             fs::path path{sect.key_value_pairs["path"]};
+            path = fs::canonical(path);
 
             //config specifies filename not directory
             if(path.has_extension())
@@ -174,6 +175,7 @@ int parse_arguments(const int argc, char* argv[])
 */
 void print_cfg(const ConfigSection& section_config, const ConfigSection& global_colors,  const ConfigSection& section_colors, std::ostream& stream)
 {
+
     //all of these values should have benn configured in config.cpp: process_config
     std::string format = section_config.key_value_pairs.at("format");
     std::string id_format = section_config.key_value_pairs.at("format_id");
@@ -194,8 +196,14 @@ void print_cfg(const ConfigSection& section_config, const ConfigSection& global_
     //unifies fields
     col_section.merge(col_global);
 
+    
     //changes colors from names to indices wherever possible
     process_colors(col_section);
+    
+    /*for(const auto& [k, v] : col_section)
+    {
+        std::cout << "\t" << k << ":\t" << v << "\n";
+    }*/
 
     const auto lines = split_string(config_format, "\n");
 
@@ -243,6 +251,9 @@ void print_cfg(const ConfigSection& section_config, const ConfigSection& global_
         //insert a comment
         if(line.starts_with("#")) 
         {
+
+            if(comment.empty()) continue;
+
             std::string out = line.substr(1);
             out = replace_all(out, "${section_name}", section_config.name); 
             out = replace_all(out, "${output_dir}", output_dir);
@@ -251,22 +262,30 @@ void print_cfg(const ConfigSection& section_config, const ConfigSection& global_
             stream << comment << line.substr(1) << "\n";
         }
         else if(line.starts_with("\n")) { stream << line; }
-        //line only contains id, formatting is up to format
-        else if(col_section.contains(line))
-        {
-            stream << format_value(format, id_format, line, col_section[line]) << "\n";
 
-            //erase the line so we can print the remainder under custom colors
-            already_printed.emplace_back(line);
-        }
-
+        //this also covers the case where the entire line is key
         //check if a key is overriden
         //FIXME: THIS ASSUMES FIRST WORD IS KEY!
         else if(col_section.contains(words[0]))
         {
             stream << format_value(format, id_format, words[0], col_section[words[0]]) << "\n";
-
             already_printed.emplace_back(words[0]);
+        }
+        //check if we have a key
+        else if(int begin = line.find("${key="); begin != std::string::npos)
+        {
+            int end = line.find("}", begin+6);
+            if(end == std::string::npos) continue;
+
+            //here we have a valid ${key=abdec}
+            std::string key = line.substr(begin+6, end-begin-6);
+
+            if(col_section.contains(key))
+            {
+                stream << format_value(format, id_format, key, col_section[key]) << "\n";
+                already_printed.emplace_back(key);
+            }
+
         }
         //here we check if line contains the entire format
         //if it contains a token, its safe to assume its a formatted line
@@ -275,7 +294,7 @@ void print_cfg(const ConfigSection& section_config, const ConfigSection& global_
             /*
                 Variable replace (TODO factor this into a function)
             */
-            std::cout << "calling with col_seciton from main.cpp\n";
+            //std::cout << "calling with col_seciton from main.cpp\n";
             std::string out_line = insert_variables(line, col_section);
 
             //if variables couldn't be replace we skip the line to avoid random stuff

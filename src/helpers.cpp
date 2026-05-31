@@ -119,10 +119,9 @@ std::string insert_variables(const std::string& input, const std::unordered_map<
         begin = out_line.find("${", begin);
         if(begin == std::string::npos) break;
 
-        std::cout << out_line << "\n";
+        //std::cout << out_line << "\n";
         //loop through closing brackets until one right after the opening is found
-        int end = 0;
-        while((end = out_line.find("}", end)) != std::string::npos && end < (begin+2)) { std::cout << end << "\n"; end++; }
+        int end = out_line.find("}", begin+2);
         if(end == std::string::npos) continue;
 
         //holds whats between ${ and }
@@ -144,6 +143,8 @@ std::string insert_variables(const std::string& input, const std::unordered_map<
             //std::cout << "\t" << ++begin << "\n";
             if(++begin > out_line.length()) break;
         }
+
+        //std::cout << v_name << ", " << var_name << "\n";
     }
 
     return out_line;

@@ -3,8 +3,9 @@
 #include <unordered_map>
 #include <string>
 #include <vector>
-#include "config_parser.h"
 #include <filesystem>
+#include "config_parser.h"
+#include "helpers.h"
 
 /*
     Parses a config string for now
@@ -27,7 +28,8 @@ void parse_config(const std::string& config, std::vector<ConfigSection>& section
         index++;
 
         //if we encounter parentheses, we swap in_string
-        if(config[index] == '\"') { in_string = !in_string; }
+        //unless parentheses are preceded by "\"
+        if(config[index] == '\"' && !(index > 0 && config[index-1] == '\\')) { in_string = !in_string; }
 
         //end of line and we're not in string
         if( ((config[index] == '\n') && !in_string) || config[index] == '\0')
@@ -61,6 +63,8 @@ void parse_line(const std::string& line, std::vector<ConfigSection>& sections)
     if(line.starts_with("\n")) return;
     if(line.empty()) return;
 
+    
+
     //syntax for new section
     if(line.starts_with("[") && line.ends_with("]"))
     {
@@ -87,6 +91,7 @@ void parse_line(const std::string& line, std::vector<ConfigSection>& sections)
     int start = pos;
     pos = line.find_first_of(" \t=");
     std::string key = line.substr(start, pos-start);
+    key = replace_all(key, "\\\"", "\"");
 
 
     //whitespace 2
@@ -106,6 +111,7 @@ void parse_line(const std::string& line, std::vector<ConfigSection>& sections)
 
     //second word
     std::string value = line.substr(pos, line.find_last_not_of(" \t")-pos+1);
+    value = replace_all(value, "\\\"", "\"");
 
     //remove enclosing ""
     if(value.starts_with("\"") && value.ends_with("\""))
