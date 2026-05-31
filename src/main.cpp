@@ -19,7 +19,11 @@ std::string color_file{""};
 //TODO: file includes
 //TODO: literal files (copy and paste entire file if its premade (like vscode themes))
 //TODO: proper color parsing so RGBA is supported
-//TODO: add default values as tokens
+
+//TODO: explain config_format in readme
+// if a line contains ${var_name}, the whole line will get treated as a format
+// if a line is only a key (eg. red, color_13), the line will be parsed through the formatter again
+// with the line as the key
 
 namespace fs = std::filesystem;
 
