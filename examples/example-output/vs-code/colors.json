@@ -1,0 +1,7 @@
+{
+    "name" : "VsCode-theme test",
+    "colors": {
+
+        "terminal.ansiBlack": "##000000"
+    }
+}

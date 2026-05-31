@@ -117,7 +117,7 @@ int main(int argc, char *argv[])
         if(sect.name != "default")
         {
             fs::path path{sect.key_value_pairs["path"]};
-            path = fs::canonical(path);
+            path = path.lexically_normal();
 
             //config specifies filename not directory
             if(path.has_extension())
