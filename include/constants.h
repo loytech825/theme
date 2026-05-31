@@ -2,10 +2,11 @@
 #include <string>
 #include <array>
 
-inline const std::string DEFAULT_PATH        = "${output_dir}/${section_name}";
+inline const std::string DEFAULT_PATH       = "${output_dir}/${section_name}";
 inline const std::string DEFAULT_FORMAT     = "${color_name} #${color_value}";
 inline const std::string DEFAULT_FORMAT_ID  = "${color_name} #${color_value}";
 inline const std::string DEFAULT_COMMENT    = "#";
+inline const std::string DEFAULT_MODE       = "modify-add";
 
 inline const std::array<std::string, 2> CONFIG_VARIABLES {
     "section_name",

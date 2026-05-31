@@ -25,7 +25,12 @@ void process_config(const ConfigSection& global_config, ConfigSection& section_c
     if(!section_config.key_value_pairs.contains("format"))      { section_config.key_value_pairs["format"]    = DEFAULT_FORMAT;                             } 
     if(!section_config.key_value_pairs.contains("format_id"))   { section_config.key_value_pairs["format_id"] = section_config.key_value_pairs["format"];   }
     if(!section_config.key_value_pairs.contains("comment"))     { section_config.key_value_pairs["comment"]   = DEFAULT_COMMENT;                            }
-    if(!section_config.key_value_pairs.contains("config_format")){section_config.key_value_pairs["config_format"]=DEFAULT_CONFIG_FORMAT;                            }
+    if(!section_config.key_value_pairs.contains("config_format")){section_config.key_value_pairs["config_format"]=DEFAULT_CONFIG_FORMAT;                    }
+    if(!section_config.key_value_pairs.contains("mode"))        { section_config.key_value_pairs["mode"]      = DEFAULT_MODE;                    }
+
+    //checks if mode is valid
+    if(!(section_config.key_value_pairs["mode"] != "modify-add" 
+        ||  section_config.key_value_pairs["mode"] != "modify-ignore")) { section_config.key_value_pairs["mode"] = DEFAULT_MODE; }
 
     section_config.key_value_pairs.erase("color_name");
     section_config.key_value_pairs.erase("color_id");

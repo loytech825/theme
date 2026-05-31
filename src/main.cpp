@@ -182,6 +182,9 @@ void print_cfg(const ConfigSection& section_config, const ConfigSection& global_
     std::string comment = section_config.key_value_pairs.at("comment");
     std::string config_format = section_config.key_value_pairs.at("config_format");
 
+    //whether to modify-add or modify-ignore existing values in the config
+    std::string mode = section_config.key_value_pairs.at("mode");
+
     auto col_global = global_colors.key_value_pairs;
     auto col_section = section_colors.key_value_pairs;
 
@@ -203,6 +206,42 @@ void print_cfg(const ConfigSection& section_config, const ConfigSection& global_
     */
     for(const auto& line : lines)
     {
+
+        //this will be the line to check for anything since we can remove whitespace and make life easier
+        std::string check_line = line;
+
+        //remove leading and trailing space
+        int line_begin = line.find_first_not_of(" \t");
+        int line_end = line.find_last_not_of(" \t");
+
+        if(line_begin == std::string::npos) continue;
+        if(line_begin > line_end) continue;
+
+        check_line = line.substr(line_begin, line_end-line_begin+1);
+
+        //split line into words
+        auto words = split_string(check_line, " ");
+
+
+
+        //split lines at tabs also
+        std::vector<std::string> words_temp;
+        for(auto& word : words)
+        {
+            auto temp = split_string(word, "\t");
+            words_temp.insert(words_temp.end(), temp.begin(), temp.end());
+        }
+        
+        words.insert(words.end(), words_temp.begin(), words_temp.end());
+
+        //remove quotes (to get key if config is json)
+        for(auto& word : words)
+        {
+            if(word.length() < 2) continue;
+            if(word.starts_with('"') && word.ends_with('"')) word = word.substr(1, word.length()-2);
+        }
+
+
         //insert a comment
         if(line.starts_with("#")) 
         {
@@ -214,37 +253,42 @@ void print_cfg(const ConfigSection& section_config, const ConfigSection& global_
             stream << comment << line.substr(1) << "\n";
         }
         else if(line.starts_with("\n")) { stream << line; }
+        //line only contains id, formatting is up to format
+        else if(col_section.contains(line))
+        {
+            stream << format_value(format, id_format, line, col_section[line]) << "\n";
+
+            //erase the line so we can print the remainder under custom colors
+            already_printed.emplace_back(line);
+        }
+
+        //check if a key is overriden
+        //FIXME: THIS ASSUMES FIRST WORD IS KEY!
+        else if(col_section.contains(words[0]))
+        {
+            stream << format_value(format, id_format, words[0], col_section[words[0]]) << "\n";
+
+            already_printed.emplace_back(words[0]);
+        }
+        //here we check if line contains the entire format
+        //if it contains a token, its safe to assume its a formatted line
+        else if(line.find("${") != std::string::npos)
+        {
+            /*
+                Variable replace (TODO factor this into a function)
+            */
+            std::cout << "calling with col_seciton from main.cpp\n";
+            std::string out_line = insert_variables(line, col_section);
+
+            //if line contains variables even after replacing we comment it
+            if(out_line.find("${") != std::string::npos)
+                out_line = comment + out_line;
+
+            stream << out_line << "\n";
+        }
         else
         {
-            //line only contains id, formatting is up to format
-            if(col_section.contains(line))
-            {
-                stream << format_value(format, id_format, line, col_section[line]) << "\n";
-
-                //erase the line so we can print the remainder under custom colors
-                already_printed.emplace_back(line);
-            }
-
-            //here we check if line contains the entire format
-            //if it contains a token, its safe to assume its a formatted line
-            else if(line.find("${") != std::string::npos)
-            {
-                /*
-                    Variable replace (TODO factor this into a function)
-                */
-                std::cout << "calling with col_seciton from main.cpp\n";
-                std::string out_line = insert_variables(line, col_section);
-
-                //if line contains variables even after replacing we comment it
-                if(out_line.find("${") != std::string::npos)
-                    out_line = comment + out_line;
-
-                stream << out_line << "\n";
-            }
-            else
-            {
-                stream << comment << " Missing entry - " << line << "\n";
-            }
+            stream << comment << " Missing entry - " << line << "\n";
         }
     }
 
@@ -253,11 +297,16 @@ void print_cfg(const ConfigSection& section_config, const ConfigSection& global_
         If color is one of the indexed ones (black, red, ...)
         Or provided as colorXXX where XXX is a number,
         Use alternate format
+
+        ONLY ADD IF MODE IS SET TO MODIFY ADD (for vscode, we dont want this)
     */
-    for(const auto [k, v] : col_section)
+    if(mode == "modify-add")
     {
-        if(std::find(already_printed.begin(), already_printed.end(), k) != already_printed.end()) continue;
-        stream << format_value(format, id_format, k, v);
+        for(const auto [k, v] : col_section)
+        {
+            if(std::find(already_printed.begin(), already_printed.end(), k) != already_printed.end()) continue;
+            stream << format_value(format, id_format, k, v);
+        }
     }
 }
 
