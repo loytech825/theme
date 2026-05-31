@@ -89,9 +89,9 @@ inline const std::string DEFAULT_CONFIG_FORMAT{
     "14\n"
     "15\n"
     "\n"
-    "#Background and foreground\n"
+    "#Background and foreground -> test reload\n"
     "background\n"
-    "foreground\n"
+    "foreground = #${red}\n"
     "\n"
     "#Custom colors\n"
 };

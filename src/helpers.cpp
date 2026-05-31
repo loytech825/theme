@@ -2,6 +2,7 @@
 #include <exception>
 #include <pwd.h>
 #include <unistd.h>
+#include <iostream>
 
 /*
     @brief replaces all occurences of `from` to `to` in a given `orig` DOES NOT MODIFY THE STRING, BUT RETURNS A NEW ONE 
@@ -99,4 +100,51 @@ std::vector<std::string> split_string(const std::string &input, const std::strin
     out.push_back(input.substr(last_pos));
 
     return out;
+}
+
+std::string insert_variables(const std::string& input, const std::unordered_map<std::string, std::string>& variables_source)
+{
+    std::string out_line = input;
+
+
+    /*std::cout << "NEW CALL\n";
+    for(auto [k, v] : variables_source)
+    {
+        std::cout << k << ":\t" << v << "\n———————\n";
+    }*/
+
+    int begin = 0;
+    while(true)
+    {
+        begin = out_line.find("${", begin);
+        if(begin == std::string::npos) break;
+
+        std::cout << out_line << "\n";
+        //loop through closing brackets until one right after the opening is found
+        int end = 0;
+        while((end = out_line.find("}", end)) != std::string::npos && end < (begin+2)) { std::cout << end << "\n"; end++; }
+        if(end == std::string::npos) continue;
+
+        //holds whats between ${ and }
+        std::string v_name = out_line.substr(begin+2, end-begin-2);
+        
+        //holds the same as v_name unless v_name has id, in which case it holds the id
+        std::string var_name = v_name;
+        if(int id = get_color_id(v_name); id != -1) var_name = std::to_string(id);
+        
+        //replace the token
+        if(variables_source.contains(var_name))
+        {
+            out_line = replace_all(out_line, "${"+v_name+"}", variables_source.at(var_name));
+            //std::cout << out_line << "\n";
+        }
+        //if line is left in, we need to move search begin
+        else
+        {
+            //std::cout << "\t" << ++begin << "\n";
+            if(++begin > out_line.length()) break;
+        }
+    }
+
+    return out_line;
 }

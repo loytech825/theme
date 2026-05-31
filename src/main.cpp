@@ -181,6 +181,8 @@ void print_cfg(const ConfigSection& section_config, const ConfigSection& global_
     auto col_global = global_colors.key_value_pairs;
     auto col_section = section_colors.key_value_pairs;
 
+    std::vector<std::string> already_printed;
+
     //std::cout << "Defaults: " << col_global << "\n";
     //std::cout << "Section: " << col_section << "\n";
 
@@ -210,12 +212,30 @@ void print_cfg(const ConfigSection& section_config, const ConfigSection& global_
         else if(line.starts_with("\n")) { stream << line; }
         else
         {
+            //line only contains id, formatting is up to format
             if(col_section.contains(line))
             {
                 stream << format_value(format, id_format, line, col_section[line]) << "\n";
 
                 //erase the line so we can print the remainder under custom colors
-                col_section.erase(line);
+                already_printed.emplace_back(line);
+            }
+
+            //here we check if line contains the entire format
+            //if it contains a token, its safe to assume its a formatted line
+            else if(line.find("${") != std::string::npos)
+            {
+                /*
+                    Variable replace (TODO factor this into a function)
+                */
+                std::cout << "calling with col_seciton from main.cpp\n";
+                std::string out_line = insert_variables(line, col_section);
+
+                //if line contains variables even after replacing we comment it
+                if(out_line.find("${") != std::string::npos)
+                    out_line = comment + out_line;
+
+                stream << out_line << "\n";
             }
             else
             {
@@ -232,7 +252,8 @@ void print_cfg(const ConfigSection& section_config, const ConfigSection& global_
     */
     for(const auto [k, v] : col_section)
     {
-       stream << format_value(format, id_format, k, v);
+        if(std::find(already_printed.begin(), already_printed.end(), k) != already_printed.end()) continue;
+        stream << format_value(format, id_format, k, v);
     }
 }
 

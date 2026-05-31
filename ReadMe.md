@@ -100,7 +100,7 @@ In the color config file, the sections override the default colors.
 
 ### Variables
 
-When referencing a variable, the syntax `${var_name}` is used. When referencing colors, `${color0}` is equivalent to `${black}` and so on for the 15 ANSI colors. The bright variants are referents with `${bright_black}`. The variables DO NOT HAVE to be defined before they are referenced.
+When referencing a variable, the syntax `${var_name}` is used. When referencing colors, `${color0}` is equivalent to `${black}` and so on for the 15 ANSI colors. The bright variants are referents with `${bright_black}`. The variables MUST BE defined before they are referenced.
 
 Variables are split into two types:
 - Config variables only available in the config file

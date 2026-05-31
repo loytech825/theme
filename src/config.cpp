@@ -43,41 +43,9 @@ void process_config(const ConfigSection& global_config, ConfigSection& section_c
     for(auto& [k, v] : section_config.key_value_pairs){
 
 
-        if(k == "format" || k == "format_id") continue;
+        if(k == "format" || k == "format_id" || k == "config_format") continue;
 
-        //parse inserted values
-        //find opening bracket ${ 
-        int begin = 0;
-        while((begin = v.find("${"), begin+1) != std::string::npos)
-        {
-            //std::cout << begin << "\n";
-            //loop through closing brackets until one right after the opening is found
-
-            int end = -1;
-            while((end = v.find("}", end+1)) != std::string::npos && end < (begin+2)) {}
-            if(end == std::string::npos) break;
-
-            //holds whats between ${ and }
-            std::string v_name = v.substr(begin+2, end-begin-2);
-
-        
-            /*for(const auto& var : COLOR_VARIABLES)
-            {
-                if(v_name == var) {begin = end; continue;}
-            }*/
-
-            //holds the same as v_name unless v_name has id, in which case it holds the id
-            std::string var_name = v_name;
-            if(int id = get_color_id(v_name); id != -1) v_name = std::to_string(id);
-
-            //replace the token
-            if(section_config.key_value_pairs.contains(v_name))
-                v = replace_all(v, "${"+var_name+"}", section_config.key_value_pairs[v_name]);
-
-            begin = end;
-            //else 
-            //    v = replace_all(v, "${"+var_name+"}", "");
-        }
+        v = insert_variables(v, section_config.key_value_pairs);
     }
 }
 
