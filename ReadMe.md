@@ -1,17 +1,42 @@
 # Theme - unify your colors across programs
 
-This program is designed so you have to only define your color theme once, and automatically apply it to all your programs
+Automatically generates theme files for all your programs
 
 ## Contents
-
+1.  [Pre-use setup](#pre-use-setup)
 1.  [Usage](#usage)
-1.  [Config file](#config-file)
-1.  [Color config](#color-config)
-1.  [Syntax](#syntax)
-    1. [Comments](#comments)
-    1. [Sections](#sections)
-    1. [Variables](#variables)
+1.  [Config](#config)
+    1.  [Config file](#config-file)
+    1.  [Color config](#color-config)
+    1.  [Syntax](#syntax)
+        1. [Comments](#comments)
+        1. [Sections](#sections)
+        1. [Variables](#variables)
 1. [Installation](#installation)
+
+---
+
+## Pre-use setup
+Before you can succesfully use this program, some setup is required. Ensure you set all colors in your main config files to variables (example for hyprland):
+
+```lua
+...
+inactive_border = bg
+...
+```
+
+and include a color file (where the variables will be defined):
+
+```lua
+require("hyprland-colors")
+```
+
+Then set this file as the path inside the [theme config file](#config-file):
+
+```conf
+[hyprland]
+path = "path/to/hprland-colors.lua"
+```
 
 ---
 
@@ -32,7 +57,9 @@ Options:
 
 ---
 
-## Config file 
+## Config
+
+### Config file 
 The config file contains [sections](#sections) with fields. Until a section is specified, all the variables will be under the `default` section (See [syntax](#syntax)). All sections defined (even if empty) will generate a color file. The config file can contain the following fields:
 
 | Name |Description|
@@ -40,7 +67,10 @@ The config file contains [sections](#sections) with fields. Until a section is s
 |`path`|Where the color file will be generated. If a directory, the program will create a file called colors.conf inside, if a file, it will put the contents there|
 |`format`|What color definition should look like|
 |`format-id`|If the color has an id (eg. `bright_red` or `color46`), this format will be used instead|
-|`comment`|The comment initialization string (eg `--` in lua or `#` in python)
+|`comment`|The comment initialization string (eg. `--` in lua or `#` in python)
+|`config_format`| Specifies what the output file will look like, see examples
+|`mode`| Can be either `modify-add` or `modify-ignore`. The former overrides keys `config_format` andd adds anything remaining, the former ignores fields that are not in `config_format`
+
 
 You can use [variables](#variables) in the fields. Due to the current implementation, variables can't be used on `format` and `format_id`, since they would override
 
@@ -52,8 +82,10 @@ Default values will be provided both when the config is generated and if a field
 |`format`|`${color_name} #${color_value}`|
 |`format_id`|`${color_name} #${color_value}`|
 |`comment`|`#`|
+|`config_format`| too long to fit here, TBA |
+|`mode`|`modify-add`|
 
-## Color config
+### Color config
 The color config file is also made up of sections. If any additional sections are specified here but not in the [config file](#config-file), they will be ignored.
 
 Sections can contain any field with any value, and they will be put into output files according to the `format`. If a color field name is `colorXXX` where `XXX` is any number from 0-255, the `color-id` field can be used, and will return `XXX`. This also works for standard ANSI colors (`black`, `bright_red`...).
@@ -65,7 +97,7 @@ Every field will be outputted.
 ---
 
 
-## Syntax
+### Syntax
 
 Config is a list key-value pairs, separated by `=`:
 ```
@@ -83,11 +115,11 @@ line3"
 ```
 Note that if the parentheses aren't closed, it will treat the rest of the file as the same value. The value inludes leading space in each line.
 
-### Comments
+#### Comments
 
 Comments are single line, initiated by `#`
 
-### Sections
+#### Sections
 Sections are defined with a line enclosed in `[ ]`
 ```
 [section name]
@@ -98,7 +130,7 @@ in the section, then the default section and lastly set as the default values if
 
 In the color config file, the sections override the default colors.
 
-### Variables
+#### Variables
 
 When referencing a variable, the syntax `${var_name}` is used. When referencing colors, `${color0}` is equivalent to `${black}` and so on for the 15 ANSI colors. The bright variants are referents with `${bright_black}`. The variables MUST BE defined before they are referenced.
 

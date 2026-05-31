@@ -25,6 +25,8 @@ std::string color_file{""};
 // if a line is only a key (eg. red, color_13), the line will be parsed through the formatter again
 // with the line as the key
 
+//TODO: explain mode in readme
+
 namespace fs = std::filesystem;
 
 void print_cfg(const ConfigSection& section_config, const ConfigSection& global_colors,  const ConfigSection& section_colors, std::ostream& stream);
