@@ -5,13 +5,8 @@ Automatically generates theme files for all your programs
 ## Contents
 1.  [Pre-use setup](#pre-use-setup)
 1.  [Usage](#usage)
-1.  [Config](#config)
-    1.  [Config file](#config-file)
-    1.  [Color config](#color-config)
-    1.  [Syntax](#syntax)
-        1. [Comments](#comments)
-        1. [Sections](#sections)
-        1. [Variables](#variables)
+1.  [Config](config.md)
+    1.  [Examples](examples/)
 1. [Installation](#installation)
 
 ---
