@@ -10,7 +10,7 @@
     replaces tokens
     initializes missing fields...
 */
-void process_config(const ConfigSection& global_config, ConfigSection& section_config, const std::string& output_dir)
+void process_config(const ConfigSection& global_config, ConfigSection& section_config, const std::string& output_dir, const std::string& config_dir)
 {
     auto cfg_global = global_config.key_value_pairs;
 
@@ -41,6 +41,7 @@ void process_config(const ConfigSection& global_config, ConfigSection& section_c
     {
         auto& v = pair.second;
         v = replace_all(v, "${section_name}", section_config.name);
+        v = replace_all(v, "${config_dir}", section_config.name);
         v = replace_all(v, "${output_dir}", output_dir);
     }
 

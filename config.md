@@ -18,7 +18,8 @@ Variables available
 
 |Name|Value|
 |-|-|
-|`output_dir`|the argument `-o` if provided, the default config path otherwise|
+| `output_dir`|the argument `-o` if provided, the default config path otherwise|
+| `config_dir`|the default config path (usually `~/.config/)|
 | `section_name`|the name of the current section |
 | `color_name`[^1]| name of the color|
 | `color_id`[^1]| if color has id, its id, otherwise same as `color_name`|

@@ -12,17 +12,6 @@
 std::string output_dir{""};
 std::string color_file{""};
 
-//TODO: add examples
-
-//TODO: ability to add files as variables
-//        ^ˇ
-//TODO: file includes
-//TODO: literal files (copy and paste entire file if its premade (like vscode themes))
-//TODO: proper color parsing so RGBA is supported
-
-//TODO split readme files
-//TODO add ${key=15} for config formats
-
 namespace fs = std::filesystem;
 
 void print_cfg(const ConfigSection& section_config, const ConfigSection& global_colors,  const ConfigSection& section_colors, std::ostream& stream);
@@ -79,7 +68,7 @@ int main(int argc, char *argv[])
     for(auto& sect : config)
     {
         if(sect.name != "default")
-            process_config(default_section, sect, output_dir);
+            process_config(default_section, sect, output_dir, config_dir);
     }
 
 

@@ -8,5 +8,5 @@
 
 #include "config_parser.h"
 
-void process_config(const ConfigSection& global_config, ConfigSection& section_config, const std::string& output_dir);
+void process_config(const ConfigSection& global_config, ConfigSection& section_config, const std::string& output_dir, const std::string& config_dir);
 void process_colors(std::unordered_map<std::string, std::string>& color_map);

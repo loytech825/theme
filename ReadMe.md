@@ -8,6 +8,7 @@ Automatically generates theme files for all your programs
 1.  [Config](config.md)
     1.  [Examples](examples/)
 1. [Installation](#installation)
+1. [Planned additions](plans.md)
 
 ---
 
