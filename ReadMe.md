@@ -1,14 +1,17 @@
-# Theme - unify your colors across programs
+# Thync
+
+S**ync** your **th**emes witha single file!
 
 Automatically generates theme files for all your programs
 
 ## Contents
-1.  [Pre-use setup](#pre-use-setup)
-1.  [Usage](#usage)
-1.  [Config](config.md)
-    1.  [Examples](examples/)
-1. [Installation](#installation)
-1. [Planned additions](plans.md)
+- [Thync](#thync)
+  - [Contents](#contents)
+  - [Pre-use setup](#pre-use-setup)
+  - [Usage](#usage)
+  - [Config](#config)
+    - [Examples](#examples)
+  - [Installation](#installation)
 
 ---
 

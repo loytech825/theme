@@ -2,7 +2,7 @@
 #include <string>
 #include <array>
 
-inline const std::string APP_NAME = "theme"; 
+inline const std::string APP_NAME = "thync"; 
 
 inline const std::string DEFAULT_PATH       = "${output_dir}/${section_name}";
 inline const std::string DEFAULT_FORMAT     = "${color_name} #${color_value}";
