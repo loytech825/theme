@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
 
 
     fs::path config_dir{get_config_dir()};
-    fs::path config_path{config_dir / "theme/config.conf"};
+    fs::path config_path{config_dir / APP_NAME / "config.conf"};
 
     create_conf(config_path);
 
