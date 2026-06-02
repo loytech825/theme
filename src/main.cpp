@@ -5,12 +5,14 @@
 
 #include "config.h"
 #include "helpers.h"
+#include "color256.h"
 #include <cstring>
 
 
 /*Global settings*/
 std::string output_dir{""};
 std::string color_file{""};
+bool generate_pallete{false};
 
 namespace fs = std::filesystem;
 
@@ -29,6 +31,49 @@ int main(int argc, char *argv[])
     {
         std::cout << s << "-----";
     }
+
+    return 0;*/
+
+    /*std::array<Color, 16> colors {
+        /*Color{0, 0, 0},
+        Color{128, 0, 0},
+        Color{0, 128, 0},
+        Color{128, 128, 0},
+        Color{0, 0, 128},
+        Color{128, 0, 128},
+        Color{0, 128, 128},
+        Color{192, 192, 192},
+        Color{128, 128, 128},
+        Color{255, 0, 0},
+        Color{0, 255, 0},
+        Color{255, 255, 0},
+        Color{0, 0, 255},
+        Color{255, 0, 255},
+        Color{0, 255, 255},
+        Color{255, 255, 255}
+
+        hex2rgb("282828"),
+        hex2rgb("cc241d"),
+        hex2rgb("98971a"),
+        hex2rgb("d79921"),
+        hex2rgb("458588"),
+        hex2rgb("b16286"),
+        hex2rgb("689d6a"),
+        hex2rgb("a89984"),
+        
+        hex2rgb("928374"),
+        hex2rgb("fb4934"),
+        hex2rgb("b8bb26"),
+        hex2rgb("fabd2f"),
+        hex2rgb("83a598"),
+        hex2rgb("d3869b"),
+        hex2rgb("8ec07c"),
+        hex2rgb("ebdbb2"),
+
+    };
+
+    print_256(generate_256(colors, colors[0], colors[7]));
+
 
     return 0;*/
 
@@ -143,6 +188,7 @@ int parse_arguments(const int argc, char* argv[])
     {
         //boolean arguments
         if(strcmp(argv[i], "-h") == 0) { std::cout << HELP; continue;}
+        if(strcmp(argv[i], "-g") == 0) { generate_pallete = true; continue;}
 
         //arguments that require another field
         if(i < argc-1)

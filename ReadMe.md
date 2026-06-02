@@ -1,6 +1,6 @@
 # Thync
 
-S**ync** your **th**emes witha single file!
+S**ync** your **th**emes with a single file!
 
 Automatically generates theme files for all your programs
 
