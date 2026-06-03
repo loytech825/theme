@@ -23,18 +23,7 @@ int parse_arguments(const int argc, char* argv[]);
 int main(int argc, char *argv[])
 {
 
-    //testing areas
-    /*std::string banana {"123456\n789\n12\n\n1011"};
-    const auto vec = split_string(banana, "\n");
-
-    for(auto s : vec)
-    {
-        std::cout << s << "-----";
-    }
-
-    return 0;*/
-
-    /*std::array<Color, 16> colors {
+    std::array<Color, 16> colors {
         /*Color{0, 0, 0},
         Color{128, 0, 0},
         Color{0, 128, 0},
@@ -50,7 +39,7 @@ int main(int argc, char *argv[])
         Color{0, 0, 255},
         Color{255, 0, 255},
         Color{0, 255, 255},
-        Color{255, 255, 255}
+        Color{255, 255, 255}*/
 
         hex2rgb("282828"),
         hex2rgb("cc241d"),
@@ -72,10 +61,15 @@ int main(int argc, char *argv[])
 
     };
 
-    print_256(generate_256(colors, colors[0], colors[7]));
+    print_256(generate_256(colors, colors[0], colors[15]));
 
 
-    return 0;*/
+    return 0;
+
+    std::cout << hex2rgb("00ff05") << "\n";
+    std::cout << rgb2hex(hex2rgb("00ff05")) << "\n";
+
+    return 0;
 
     //check if arguments parse successfully
     if(parse_arguments(argc, argv)) return -1;
@@ -122,11 +116,15 @@ int main(int argc, char *argv[])
     /*
         COLOR PARSING
     */
-    std::vector<ConfigSection> COLORS;
+    std::vector<ConfigSection> config_colors;
+    std::vector<ColorSection> COLORS;
 
     if(!fs::is_regular_file(color_file)) { std::cout << "File " << fs::absolute(color_file) << " doesn't exist!\n"; return -1; }
 
-    parse_config( fs::path{color_file}, COLORS );
+    parse_config( fs::path{color_file}, config_colors );
+
+    for(auto& c : config_colors) {COLORS.emplace_back(c); };
+
 
     ConfigSection default_colors;
     default_colors.name = "default";

@@ -6,11 +6,16 @@
 /*Attempt at a C++ port of https://github.com/jake-stewart/color256*/
 /*******************************************************************/
 
+
+
 //general class for color variables
 // RGB, LAB, HSV...
 struct Color{
     double x, y, z;  
 };
+
+typedef std::array<Color, 256> Palette;
+
 
 std::ostream& operator<<(std::ostream& os, const Color& color);
 
@@ -19,6 +24,13 @@ std::ostream& operator<<(std::ostream& os, const Color& color);
     @param hex Code of format RRGGBB
 */
 Color hex2rgb(const std::string& hex);
+
+/*
+    @brief Turns a RGB color into a hex string
+    @param RGB a color object
+    @return string of format RRGGBB
+*/
+std::string rgb2hex(const Color& RGB);
 
 /*
     @brief Converts RGB to LAB
@@ -37,7 +49,7 @@ Color lab2rgb(Color LAB);
 /*
     @brief Generates a full 256 color pallete
 */
-std::array<Color, 256> generate_256(std::array<Color, 16> base8, Color bg, Color fg);
+Palette generate_256(std::array<Color, 16> base8, Color bg, Color fg);
 
 /*
     @brief showcases the 256 colors

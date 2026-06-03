@@ -4,6 +4,7 @@
 #include <filesystem>
 
 #include "constants.h"
+#include "color256.h"
 
 //struct ProgramConfig
 //{
@@ -30,6 +31,13 @@ struct ConfigSection
 {
     std::string name;
     std::unordered_map<std::string, std::string> key_value_pairs;
+};
+
+struct ColorSection : public ConfigSection
+{
+    Palette generated_colors;
+
+    ColorSection(const ConfigSection& other) { name = other.name; key_value_pairs = other.key_value_pairs; }
 };
 
 //parses a "line" of config

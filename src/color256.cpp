@@ -1,6 +1,8 @@
 #include "color256.h"
 #include <cmath>
 #include <algorithm>
+#include <sstream>
+#include <iomanip>
 
 //reference white point D_65
 Color D_65_2deg{0.9505, 1.00000, 1.089};
@@ -36,6 +38,17 @@ Color hex2rgb(const std::string& hex)
     int B = std::stoi(hex.substr(4, 2), nullptr, 16);
 
     return Color(R, G, B);
+}
+
+std::string rgb2hex(const Color &RGB)
+{
+    std::stringstream stream;
+
+    stream << std::setfill('0') << std::setw(2) << std::hex << (int)RGB.x;
+    stream << std::setfill('0') << std::setw(2) << std::hex << (int)RGB.y;
+    stream << std::setfill('0') << std::setw(2) << std::hex << (int)RGB.z;
+
+    return stream.str();
 }
 
 Color rgb2lab(Color RGB)
@@ -118,7 +131,7 @@ Color lab2rgb(Color LAB)
     return RGB;
 }
 
-std::array<Color, 256> generate_256(std::array<Color, 16> base16, Color bg, Color fg)
+Palette generate_256(std::array<Color, 16> base16, Color bg, Color fg)
 {
     std::array<Color, 8> base_8_lab;
 

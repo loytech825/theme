@@ -59,44 +59,85 @@ void process_config(const ConfigSection& global_config, ConfigSection& section_c
     changes color names to id where possible
     (note: black=0, red=1...bright_black=8, bright_red=9...)
 */
-void process_colors(std::unordered_map<std::string, std::string>& color_map)
+void process_colors(const ColorSection& global_colors, ColorSection& section_colors)
 {
 
-    //first loop changes color names to ids
-    //and colors of type #rrggbb to rrggbb
+    //for each section we need to generate an entire pallete, since each section can override colors
+    // -> check if base8 is present
+    // -> check for bg/fg
+    // -> generate pallete while preserving already defined colors
+    // -> put pallete into a map(section_name -> pallete)
+    // -> proceed with config generation
 
-    //we need this so we dont edit what we loop through
-    auto editable_map = color_map;
+    //first merge globals with section
+    //need this because c++
+    auto section_map = section_colors.key_value_pairs;
+    auto global_map = global_colors.key_value_pairs;
 
-    for(auto& [k, v] : color_map)
+    section_map.merge(global_map); 
+
+
+    //Changes colors to ids where possible, removes # before colors
+    for(auto& [k, v] : section_colors.key_value_pairs)
     {
-        //std::cout << k << ":\t " << v << "\n";
         if( int id = get_color_id(k); id != -1)
         {
-            //std::cout << "Replacing " << k << " with " << id << "\n"; 
             //this code changes a key in the map
-            auto nh = editable_map.extract(k);
+            auto nh = section_map.extract(k);
             nh.key() = std::to_string(id);
-            editable_map.insert(std::move(nh));
+            section_map.insert(std::move(nh));
         }
 
         //is v is of type #rrggbb or #rrggbbaa strip #
-        //std::cout << v.find("${") << "\t";
-        if(v.starts_with("#") && (v.length() == 7 || v.length() == 9) && (v.find("${") == std::string::npos))
-        {
-            //std::cout << "v:" << v << "\n";
-            v = v.substr(1);
-        }
+        if(v.starts_with("#") && (v.length() == 7 || v.length() == 9) && (v.find("${") == std::string::npos)) { v = v.substr(1); }
     }
+
+    //here all colors are id's and all values arre RRGGBB without #
+
+    //we check if map contains colors 1-6 and (color 0 or background) and (color 7 or foreground)
+    if(     section_map.contains("1") 
+        &&  section_map.contains("2")
+        &&  section_map.contains("3")
+        &&  section_map.contains("4")
+        &&  section_map.contains("5")
+        &&  section_map.contains("6")
+        &&  ( section_map.contains("0") || section_map.contains("background") )
+        &&  ( section_map.contains("7") || section_map.contains("foreground") )
+    )
+    {
+        //TODO: background / foreground and color0 / color7 parsing
+        /*
+            BASE COLOR INITIALIZATION
+        */
+        //we need a base16 for the color function, palette is separate from colors anyway
+        //so we can populate the first 8 and leave the others empty
+        std::array<Color, 16> base8;
+        if(section_map.contains("background"))  base8[0] = hex2rgb(section_map.at("background"));
+        else                                    base8[0] = hex2rgb(section_map.at("0"));
+
+        base8[1] = hex2rgb(section_map.at("1"));
+        base8[1] = hex2rgb(section_map.at("2"));
+        base8[1] = hex2rgb(section_map.at("3"));
+        base8[1] = hex2rgb(section_map.at("4"));
+        base8[1] = hex2rgb(section_map.at("5"));
+        base8[1] = hex2rgb(section_map.at("6"));
+
+        if(section_map.contains("background"))  base8[7] = hex2rgb(section_map.at("foreground"));
+        else                                    base8[7] = hex2rgb(section_map.at("7"));
+
+        /*
+            GENERATE AND MERGE PALETTE
+        */
+        section_colors.generated_colors = generate_256(base8, base8[1], base8[7]);
+    
+    }
+
 
     //second loop replaces variables
     //this is separate because if a default color refers to a variable that gets
     //overridden in a section, it wont work
     //auto map = color_map;
-    for(auto& [k, v] : editable_map){
-        //parse inserted values
-        v = insert_variables(v, editable_map);
-    }
+    for(auto& [k, v] : section_map){ v = insert_variables(v, section_map, section_colors.generated_colors); }
 
-    color_map = editable_map;
+    section_colors.key_value_pairs = section_map;
 }

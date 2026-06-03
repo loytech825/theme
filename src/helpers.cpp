@@ -149,3 +149,48 @@ std::string insert_variables(const std::string& input, const std::unordered_map<
 
     return out_line;
 }
+
+std::string insert_variables(const std::string &input, const std::unordered_map<std::string, std::string> &variables_source, Palette gen_colors)
+{
+    std::string out_line = input;
+
+
+    /*std::cout << "NEW CALL\n";
+    for(auto [k, v] : variables_source)
+    {
+        std::cout << k << ":\t" << v << "\n———————\n";
+    }*/
+
+    int begin = 0;
+    while(true)
+    {
+        begin = out_line.find("${", begin);
+        if(begin == std::string::npos) break;
+
+        //std::cout << out_line << "\n";
+        //loop through closing brackets until one right after the opening is found
+        int end = out_line.find("}", begin+2);
+        if(end == std::string::npos) continue;
+
+        //holds whats between ${ and }
+        std::string v_name = out_line.substr(begin+2, end-begin-2);
+        
+        //holds the same as v_name unless v_name has id, in which case it holds the id
+        std::string var_name = v_name;
+        int id = get_color_id(v_name);
+        if(id != -1) var_name = std::to_string(id);
+        
+        //first check the variable source
+        if(variables_source.contains(var_name)) { out_line = replace_all(out_line, "${"+v_name+"}", variables_source.at(var_name)); }
+
+
+        //if id is valid and is not in primary colors, use generated ones
+        else if(id != -1)   { out_line = replace_all(out_line, "${"+v_name+"}", rgb2hex(gen_colors.at(id))); }
+
+
+        //if line is left in, we need to move search begin
+        else { if(++begin > out_line.length()) break; }
+    }
+
+    return out_line;
+}

@@ -20,3 +20,11 @@ std::vector<std::string> split_string(const std::string& input, const std::strin
     @param variables_source where to search for variables 
 */
 std::string insert_variables(const std::string& input, const std::unordered_map<std::string, std::string>& variables_source);
+
+/*
+    @brief Replaces all occurences of ${var_name}, taking into account generated colors
+    @param input string
+    @param variable_source primary variable source
+    @param gen_colors a Palette of colors if `variable_source` doesn't have a variable
+*/
+std::string insert_variables(const std::string& input, const std::unordered_map<std::string, std::string>& variables_source, Palette gen_colors);
