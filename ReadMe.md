@@ -5,13 +5,12 @@ S**ync** your **th**emes with a single file!
 Automatically generates theme files for all your programs
 
 ## Contents
-- [Thync](#thync)
-  - [Contents](#contents)
-  - [Pre-use setup](#pre-use-setup)
-  - [Usage](#usage)
-  - [Config](#config)
-    - [Examples](#examples)
-  - [Installation](#installation)
+- [Contents](#contents)
+- [Pre-use setup](#pre-use-setup)
+- [Usage](#usage)
+- [Config](config.md)
+  - [Examples](examples/)
+- [Installation](#installation)
 
 ---
 
@@ -30,7 +29,7 @@ and include a color file (where the variables will be defined):
 require("hyprland-colors")
 ```
 
-Then set this file as the path inside the [theme config file](#config-file):
+Then set this file as the path inside the [theme config file](config.md#configuration-files):
 
 ```conf
 ...
@@ -43,7 +42,7 @@ path = "path/to/hprland-colors.lua"
 
 ## Usage
 
-`theme [options] <color-file-name> <output-dir>`
+`thync [options] <color-file-name> <output-dir>`
 
 First argument that doesn't belong to any option goes to \<color-file-name>, the second to \<output-dir>. \<output-dir> defaults to local config folder, checks are performed in order:
  1. XDG_CONFIG_HOME
@@ -71,13 +70,13 @@ Examples are provided in the [examples](examples/) folder.
 Clone the repository
 
 ```bash
-git clone https://github.com/loytech825/theme.git
+git clone https://github.com/loytech825/thync.git
 ```
 
 Go into the repo folder and create a folder called build, and go into build
 
 ```bash
-cd theme
+cd thync
 mkdir build
 cd build
 ```
