@@ -42,6 +42,8 @@ struct ColorSection
     std::unordered_map<std::string, Color> colors;
 };
 
+std::ostream& operator<<(std::ostream& os, const ConfigSection& cfg);
+
 //parses a "line" of config
 void parse_line(const std::string& line, std::vector<ConfigSection>& sections);
 void parse_config(const std::string& config, std::vector<ConfigSection>& sections);

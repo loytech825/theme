@@ -88,6 +88,8 @@ ConfigSection prepare_section(const ConfigSection& config)
         out.key_value_pairs[key] = color;
     }
 
+    out.name = config.name;
+
     return out;
 }
 
@@ -160,17 +162,22 @@ ColorConfig process_colors(std::vector<ConfigSection> config)
     //second loop replaces variables
     //this is separate because if a default color refers to a variable that gets
     //overridden in a section, it wont work
+
+
     for(auto it = config.begin(); it != config.end(); it++)
     { 
         auto& sect = *it;
+
+        //this is needed to make sure local variables are checked first
+        //also this works cuz global_map is a copy
+        auto why_do_i_need_another_one = global_map;
+        sect.key_value_pairs.merge(why_do_i_need_another_one);
+
+        std::cout << sect << "\n";
         for(auto& [k, v] : sect.key_value_pairs)
         {
             v = insert_variables(v, sect.key_value_pairs, out.palette); 
         }
-        //parse variables to colors
-
-        //is v is of type #rrggbb or #rrggbbaa strip #
-        //for now only parses RRGGBB
     }
 
     out.global = config.at(0);

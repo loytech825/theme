@@ -224,7 +224,7 @@ void print_cfg(const ConfigSection& section_config, const ConfigSection& global_
     //std::cout << "Section: " << col_section << "\n";
 
     //unifies fields
-    col_section.merge(col_global);
+    //col_section.merge(col_global);
     
     /*for(const auto& [k, v] : col_section)
     {

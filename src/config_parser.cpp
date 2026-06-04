@@ -7,6 +7,18 @@
 #include "config_parser.h"
 #include "helpers.h"
 
+
+std::ostream& operator<<(std::ostream& os, const ConfigSection& cfg)
+{
+    std::cout << cfg.name << "\n";
+    for(const auto& [k, v] : cfg.key_value_pairs)
+    {
+        os << k << " : " << v << "\n";
+    }
+
+    return os;
+}
+
 /*
     Parses a config string for now
     return via `sections`
