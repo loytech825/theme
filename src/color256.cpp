@@ -204,13 +204,13 @@ void print_256(const std::array<Color, 256> palette)
         B = std::clamp(B, 0, 255);
 
         //std::cout << "R: " << R << "G: " << G << "B: " << B << "\n"; 
-        std::cout << "\033[48;2;" << R << ";" << G << ";" << B << "m" << id;
+        std::cout << "\033[48;2;" << R << ";" << G << ";" << B << "m" << id << " " << rgb2hex(palette[i]);
 
         if(i == 7) std::cout << "\033[m\n";
     }
 
     std::cout << "\033[m\n";
-    std::cout << "\nThe generated 216 colors: \n";
+    std::cout << "\nThe generated 216 colors: \n"; //<< "\033[m   ";
 
 
     for(int i = 0; i < 6; i++)
@@ -219,7 +219,7 @@ void print_256(const std::array<Color, 256> palette)
         {
             for(int k = 0; k < 6; k++)
             {
-                int index = 16 + (36 * j) + (6 * k) + i;
+                int index = 16 + (36 * i) + (6 * k) + j;
                 std::string id = std::to_string(index);
                 //while(id.length() < 5) id = id+" ";
                 while(id.length() < 3) id = " "+id;
@@ -234,15 +234,16 @@ void print_256(const std::array<Color, 256> palette)
                 B = std::clamp(B, 0, 255);
 
                 //std::cout << "R: " << R << "G: " << G << "B: " << B << "\n"; 
-                std::cout << "\033[48;2;" << R << ";" << G << ";" << B << "m" << id;
+                std::cout << "\033[48;2;" << R << ";" << G << ";" << B << "m" << id << " " << rgb2hex(palette[index]) << "\033[m  ";
             }
 
-            std::cout << "\033[m     "; 
+            //std::cout << "\033[m     "; 
+            std::cout << "\033[m\n";
         }
         std::cout << "\033[m\n";
     }
 
-    std::cout << "\nGrayscale: \n     ";
+    std::cout << "\nGrayscale: \n";
 
     for(int i = 232; i < 256; i++)
     {
@@ -255,8 +256,8 @@ void print_256(const std::array<Color, 256> palette)
         B = std::clamp(B, 0, 255);
 
         //std::cout << "R: " << R << "G: " << G << "B: " << B << "\n"; 
-        std::cout << "\033[48;2;" << R << ";" << G << ";" << B << "m " << i << " ";
+        std::cout << "\033[48;2;" << R << ";" << G << ";" << B << "m " << i << " " << " " << rgb2hex(palette[i]) << "\033[m   ";
+        std::cout << "\033[m\n";
     }
 
-    std::cout << "\033[m\n";
 }

@@ -33,11 +33,13 @@ struct ConfigSection
     std::unordered_map<std::string, std::string> key_value_pairs;
 };
 
-struct ColorSection : public ConfigSection
+/*
+    Holds the data for a single section of the color file
+*/
+struct ColorSection
 {
-    Palette generated_colors;
-
-    ColorSection(const ConfigSection& other) { name = other.name; key_value_pairs = other.key_value_pairs; }
+    std::string name;
+    std::unordered_map<std::string, Color> colors;
 };
 
 //parses a "line" of config

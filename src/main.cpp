@@ -12,18 +12,19 @@
 /*Global settings*/
 std::string output_dir{""};
 std::string color_file{""};
-bool generate_pallete{false};
+//bool generate_pallete{false};
+bool preview{false}; 
 
 namespace fs = std::filesystem;
 
-void print_cfg(const ConfigSection& section_config, const ConfigSection& global_colors,  const ConfigSection& section_colors, std::ostream& stream);
+void print_cfg(const ConfigSection& section_config, const ConfigSection& global_colors,  const ConfigSection& section_colors, const Palette& palette, std::ostream& stream);
 std::string format_value(const std::string& format, const std::string& id_format, const std::string& key, const std::string& value);
 int parse_arguments(const int argc, char* argv[]);
 
 int main(int argc, char *argv[])
 {
 
-    std::array<Color, 16> colors {
+    /*std::array<Color, 16> colors {
         /*Color{0, 0, 0},
         Color{128, 0, 0},
         Color{0, 128, 0},
@@ -39,7 +40,7 @@ int main(int argc, char *argv[])
         Color{0, 0, 255},
         Color{255, 0, 255},
         Color{0, 255, 255},
-        Color{255, 255, 255}*/
+        Color{255, 255, 255}
 
         hex2rgb("282828"),
         hex2rgb("cc241d"),
@@ -64,12 +65,12 @@ int main(int argc, char *argv[])
     print_256(generate_256(colors, colors[0], colors[15]));
 
 
-    return 0;
+    return 0;*/
 
-    std::cout << hex2rgb("00ff05") << "\n";
+    /*std::cout << hex2rgb("00ff05") << "\n";
     std::cout << rgb2hex(hex2rgb("00ff05")) << "\n";
 
-    return 0;
+    return 0;*/
 
     //check if arguments parse successfully
     if(parse_arguments(argc, argv)) return -1;
@@ -91,50 +92,43 @@ int main(int argc, char *argv[])
         CONFIG FILE PARSING
     */
 
-    //if(!fs::is_regular_file(config_path)) { std::cout << "File " << config_path << " doesn't exist!\n"; return -1;}
+    std::vector<ConfigSection> config_vec;
+    parse_config( fs::path{config_path}, config_vec );
 
-    std::vector<ConfigSection> config;
-    parse_config( fs::path{config_path}, config );
+    ///default section guaranteed to exist
 
-    //check if section "default" exists
-    //if not create it
-    ConfigSection default_section;
-    default_section.name = "default";
+    //setup config data structure
+    Config config;
+    config.global = config_vec.at(0);
+    config.sections.insert(config.sections.begin(), config_vec.begin()+1, config_vec.end());
 
-    if(auto loc = std::find_if(config.begin(), config.end(), [](const ConfigSection& sect){ return sect.name == "default"; }); loc != config.end()) default_section = *loc;
-
-    //process all sections to remove raw data
-    for(auto& sect : config)
-    {
-        if(sect.name != "default")
-            process_config(default_section, sect, output_dir, config_dir);
-    }
-
-
+    process_config(config, output_dir, config_dir);
 
 
     /*
         COLOR PARSING
     */
     std::vector<ConfigSection> config_colors;
-    std::vector<ColorSection> COLORS;
-
+    
     if(!fs::is_regular_file(color_file)) { std::cout << "File " << fs::absolute(color_file) << " doesn't exist!\n"; return -1; }
-
+    
     parse_config( fs::path{color_file}, config_colors );
 
-    for(auto& c : config_colors) {COLORS.emplace_back(c); };
+    //set up color data structure
+    ColorConfig colors = process_colors(config_colors);
 
+    if(preview)
+    {
+        print_256(colors.palette);
 
-    ConfigSection default_colors;
-    default_colors.name = "default";
+        std::cout << "\n\n";
+    }
 
-    if(auto loc = std::find_if(COLORS.begin(), COLORS.end(), [](const ConfigSection& sect){ return sect.name == "default"; }); loc != COLORS.end()) default_colors = *loc;
 
     /*
         Prints colors to files
     */
-    for(auto& sect : config)
+    for(auto& sect : config.sections)
     {
         /*for(const auto& [k, v] : sect.key_value_pairs)
         {
@@ -144,7 +138,8 @@ int main(int argc, char *argv[])
         ConfigSection to_print;
         to_print.name = sect.name;
 
-        if(auto loc = std::find_if(COLORS.begin(), COLORS.end(), [&sect](const ConfigSection& int_sect){ return int_sect.name == sect.name; }); loc != COLORS.end()) to_print = *loc;
+        //check if colors has a special section
+        if(auto loc = std::find_if(colors.sections.begin(), colors.sections.end(), [&sect](const ConfigSection& int_sect){ return int_sect.name == sect.name; }); loc != colors.sections.end()) to_print = *loc;
 
         if(sect.name != "default")
         {
@@ -161,10 +156,11 @@ int main(int argc, char *argv[])
                 if(fs::is_directory(path)) path /= "colors.conf";
             }
 
-            std::cout << "Writing section "  << sect.name << " to " << fs::absolute(path) << "\n";
+            std::cout << "Writing section "  << sect.name << " to " << fs::absolute(path).lexically_normal() << "\n";
 
             std::ofstream file{path};
-            print_cfg(sect, default_colors, to_print, file);
+            print_cfg(sect, colors.global, to_print, colors.palette, file);
+            file.close();
         }
     }
 }
@@ -186,7 +182,8 @@ int parse_arguments(const int argc, char* argv[])
     {
         //boolean arguments
         if(strcmp(argv[i], "-h") == 0) { std::cout << HELP; continue;}
-        if(strcmp(argv[i], "-g") == 0) { generate_pallete = true; continue;}
+        if(strcmp(argv[i], "--preview") == 0) { preview = true; continue;}
+        //if(strcmp(argv[i], "-g") == 0) { generate_pallete = true; continue;}
 
         //arguments that require another field
         if(i < argc-1)
@@ -206,7 +203,7 @@ int parse_arguments(const int argc, char* argv[])
 /*
     This actually prints the colors into a file
 */
-void print_cfg(const ConfigSection& section_config, const ConfigSection& global_colors,  const ConfigSection& section_colors, std::ostream& stream)
+void print_cfg(const ConfigSection& section_config, const ConfigSection& global_colors,  const ConfigSection& section_colors, const Palette& palette, std::ostream& stream)
 {
 
     //all of these values should have benn configured in config.cpp: process_config
@@ -228,10 +225,6 @@ void print_cfg(const ConfigSection& section_config, const ConfigSection& global_
 
     //unifies fields
     col_section.merge(col_global);
-
-    
-    //changes colors from names to indices wherever possible
-    process_colors(col_section);
     
     /*for(const auto& [k, v] : col_section)
     {
@@ -327,8 +320,7 @@ void print_cfg(const ConfigSection& section_config, const ConfigSection& global_
             /*
                 Variable replace (TODO factor this into a function)
             */
-            //std::cout << "calling with col_seciton from main.cpp\n";
-            std::string out_line = insert_variables(line, col_section);
+            std::string out_line = insert_variables(line, col_section, palette);
 
             //if variables couldn't be replace we skip the line to avoid random stuff
             if(out_line.find("${") != std::string::npos)
