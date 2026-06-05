@@ -14,14 +14,15 @@
 */
 void process_config(Config& config, const std::string& output_dir, const std::string& config_dir)
 {
-    auto cfg_global = config.global.key_value_pairs;
-
+    
     for(auto& section_config : config.sections)
     {
-
+        
         //if section has defined only format, we need to override format_id as well
         if(section_config.key_value_pairs.contains("format") && !section_config.key_value_pairs.contains("format_id")) { section_config.key_value_pairs["format_id"] = section_config.key_value_pairs["format"]; }
-
+        
+        //since merge messes up stuff
+        auto cfg_global = config.global.key_value_pairs;
         section_config.key_value_pairs.merge(cfg_global);
 
         //initializes missing fields

@@ -2,7 +2,7 @@
 
 S**ync** your **th**emes with a single file!
 
-Automatically generates theme files for all your programs
+Automatically generates theme files for all your programs. Provided the base 8 colors, it generates the entire 256 color pallete.
 
 ## Contents
 - [Contents](#contents)

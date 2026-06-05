@@ -23,7 +23,7 @@ std::ostream& operator<<(std::ostream& os, const ConfigSection& cfg)
     Parses a config string for now
     return via `sections`
 */
-void parse_config(const std::string& config, std::vector<ConfigSection>& sections)
+std::vector<ConfigSection> parse_config(const std::string& config)
 {
     int index = -1;
     int last_word_index = 0;
@@ -32,6 +32,8 @@ void parse_config(const std::string& config, std::vector<ConfigSection>& section
     bool is_key{true};
     //are we currently in parentheses
     bool in_string{false};
+
+    std::vector<ConfigSection> sections;
 
     //loops thorugh each character in the file
     do
@@ -53,9 +55,11 @@ void parse_config(const std::string& config, std::vector<ConfigSection>& section
 
     }while(config[index] != '\0');
 
+    return sections;
+
 }
 
-void parse_config(const std::filesystem::path& file_path, std::vector<ConfigSection>& sections)
+std::vector<ConfigSection> parse_config(const std::filesystem::path& file_path)
 {
     std::ifstream config_file{file_path};
     
@@ -64,7 +68,7 @@ void parse_config(const std::filesystem::path& file_path, std::vector<ConfigSect
     config_file.read(&content[0], size);
     config_file.close();
 
-    parse_config(content, sections);
+    return parse_config(content);
 }
 
 void parse_line(const std::string& line, std::vector<ConfigSection>& sections)
@@ -107,13 +111,13 @@ void parse_line(const std::string& line, std::vector<ConfigSection>& sections)
 
 
     //whitespace 2
-    pos++;
+    //pos++;
     pos = line.find_first_not_of(" \t", pos); //while(line[pos] == ' ' || line[pos] == '\t') pos++;
 
     //check for =
     if(line[pos] != '=')
     {
-        std::cout << line << ": Expected character \'=\'\n";
+        std::cout << line << ": Expected character \'=\' at pos " << pos << "\n";
         return;
     }
 

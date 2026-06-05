@@ -92,8 +92,7 @@ int main(int argc, char *argv[])
         CONFIG FILE PARSING
     */
 
-    std::vector<ConfigSection> config_vec;
-    parse_config( fs::path{config_path}, config_vec );
+    std::vector<ConfigSection> config_vec = parse_config(fs::path{config_path});
 
     ///default section guaranteed to exist
 
@@ -105,24 +104,77 @@ int main(int argc, char *argv[])
     process_config(config, output_dir, config_dir);
 
 
+
+
+
+
+    //check if defaults exist for each section
+    std::vector<ConfigSection> defaults;
+
+    //since defaults are stored as separate strings, we need to process them separately
+
+    //global
+    if(config.global.key_value_pairs.contains("defaults"))
+    {
+        ConfigSection parsed = parse_config(config.global.key_value_pairs.at("defaults"))[0];
+        if(!parsed.key_value_pairs.empty())
+        {
+            parsed.name = config.global.name;
+            defaults.emplace_back(parsed);
+        }
+    }
+
+    //local
+    for(auto& sect : config.sections)
+    {
+        if(sect.key_value_pairs.contains("defaults"))
+        {
+            ConfigSection parsed = parse_config(sect.key_value_pairs.at("defaults"))[0];
+            if(!parsed.key_value_pairs.empty())
+            {
+                parsed.name = sect.name;
+                defaults.emplace_back(parsed);
+            }
+        }
+
+    }
+
+
+
+
+
+
     /*
         COLOR PARSING
-    */
-    std::vector<ConfigSection> config_colors;
-    
+    */   
     if(!fs::is_regular_file(color_file)) { std::cout << "File " << fs::absolute(color_file) << " doesn't exist!\n"; return -1; }
     
-    parse_config( fs::path{color_file}, config_colors );
+    std::vector<ConfigSection> config_colors = parse_config(fs::path{color_file});
+    
+
+
+    //here we insert defaults if present
+    for(auto& color_sect : config_colors)
+    {
+        if(auto it = std::find_if(defaults.begin(), defaults.end(), [&color_sect](const ConfigSection& cfg){ return cfg.name == color_sect.name;}); 
+        it != defaults.end())
+        {
+           //std::cout << "found defaults for " << it->name << "\n";
+           color_sect.key_value_pairs.merge(it->key_value_pairs);
+        }
+    }
+    
+
 
     //set up color data structure
     ColorConfig colors = process_colors(config_colors);
 
-    if(preview)
-    {
-        print_256(colors.palette);
+    if(preview) { print_256(colors.palette); std::cout << "\n\n"; return 0; }
 
-        std::cout << "\n\n";
-    }
+
+
+
+
 
 
     /*
@@ -130,10 +182,6 @@ int main(int argc, char *argv[])
     */
     for(auto& sect : config.sections)
     {
-        /*for(const auto& [k, v] : sect.key_value_pairs)
-        {
-            std::cout << "\t" << k << ": " << v << "\n"; 
-        }*/
 
         ConfigSection to_print;
         to_print.name = sect.name;
@@ -182,7 +230,7 @@ int parse_arguments(const int argc, char* argv[])
     for(int i = 1; i < argc; i++)
     {
         //boolean arguments
-        if(strcmp(argv[i], "-h") == 0) { std::cout << HELP; continue;}
+        if(strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) { std::cout << HELP; continue;}
         if(strcmp(argv[i], "--preview") == 0) { preview = true; continue;}
         //if(strcmp(argv[i], "-g") == 0) { generate_pallete = true; continue;}
 
@@ -197,6 +245,8 @@ int parse_arguments(const int argc, char* argv[])
         //the first non option argument is color_file, the second is output_dir
         if( color_file.empty() )    { color_file = argv[i]; continue; }
         else if( output_dir.empty() )  { output_dir = argv[i]; continue; }
+
+        else { std::cout << "Unknown argument: " << argv[i] << "! " << "do thync -h for help.\n"; return -1;};
     }
 
     return 0;

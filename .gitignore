@@ -3,3 +3,4 @@ test.conf
 build/
 test
 out
+test*

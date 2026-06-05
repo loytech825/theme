@@ -46,6 +46,6 @@ std::ostream& operator<<(std::ostream& os, const ConfigSection& cfg);
 
 //parses a "line" of config
 void parse_line(const std::string& line, std::vector<ConfigSection>& sections);
-void parse_config(const std::string& config, std::vector<ConfigSection>& sections);
-void parse_config(const std::filesystem::path& file_path, std::vector<ConfigSection>& sections);
+std::vector<ConfigSection> parse_config(const std::string& config);
+std::vector<ConfigSection> parse_config(const std::filesystem::path& file_path);
 void create_conf(const std::filesystem::path& path);

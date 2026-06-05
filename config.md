@@ -28,16 +28,15 @@ Variables available
 [^1]: won't get parsed but will be used in `format`
 
 
-
-
-
 ## Color files
 
 These files provide colors to parse.
 Section names must be the same as in [config](#configuration-files), any additionals wont be parsed. A section must be present to be outputted.
 Color of the type `colorXXX` where `XXX` is a number from 0 to 255 and standard ANDI colors (`black`, `bright_green`, ...) will have an id. Colors with an id 0 - 15 are equivalent to ANSI colors, and will have such as `color_name`. If `mode` is set to `modify-add`, all the fields will be outputted, otherwise only those whose `key` matches the first word in a line of `config_format` (excluding `"`).
 
-Any already defined color can be used as a variable. If `color1` to `color6` and (`background` or `color0`) and (`foreground` or `color7`) are present, the program will generate a full 255 color palette.
+Any already defined color can be used as a variable. 
+
+**If `color1` to `color6` and (`background` or `color0`) and (`foreground` or `color7`) are present, the program will generate a full 255 color palette.**
 
 Any color defined as well as those generated can be used as a variable. If a field is assigned multiple times, the last definition will be used.
 
