@@ -134,24 +134,29 @@ ColorConfig process_colors(std::vector<ConfigSection> config)
         */
         //we need a base16 for the color function, palette is separate from colors anyway
         //so we can populate the first 8 and leave the others empty
-        std::array<Color, 16> base8;
-        if(global_map.contains("background"))   base8[0] = hex2rgb(global_map.at("background"));
-        else                                    base8[0] = hex2rgb(global_map.at("0"));
+        std::array<Color, 16> base16;
+        if(global_map.contains("background"))   base16[0] = hex2rgb(global_map.at("background"));
+        else                                    base16[0] = hex2rgb(global_map.at("0"));
 
-        base8[1] = hex2rgb(global_map.at("1"));
-        base8[2] = hex2rgb(global_map.at("2"));
-        base8[3] = hex2rgb(global_map.at("3"));
-        base8[4] = hex2rgb(global_map.at("4"));
-        base8[5] = hex2rgb(global_map.at("5"));
-        base8[6] = hex2rgb(global_map.at("6"));
+        base16[1] = hex2rgb(global_map.at("1"));
+        base16[2] = hex2rgb(global_map.at("2"));
+        base16[3] = hex2rgb(global_map.at("3"));
+        base16[4] = hex2rgb(global_map.at("4"));
+        base16[5] = hex2rgb(global_map.at("5"));
+        base16[6] = hex2rgb(global_map.at("6"));
 
-        if(global_map.contains("foreground"))   base8[7] = hex2rgb(global_map.at("foreground"));
-        else                                    base8[7] = hex2rgb(global_map.at("7"));
+        if(global_map.contains("foreground"))   base16[7] = hex2rgb(global_map.at("foreground"));
+        else                                    base16[7] = hex2rgb(global_map.at("7"));
+
+        for(int i = 8; i < 16; i++)
+        {
+            if(global_map.contains(std::to_string(i))) base16[i] = hex2rgb(global_map.at(std::to_string(i)));
+        }
 
         /*
             GENERATE AND MERGE PALETTE
         */
-        out.palette = generate_256(base8, base8[0], base8[7]);
+        out.palette = generate_256(base16, base16[0], base16[7]);
         generated = true;
     
     }
@@ -173,7 +178,7 @@ ColorConfig process_colors(std::vector<ConfigSection> config)
         auto why_do_i_need_another_one = global_map;
         sect.key_value_pairs.merge(why_do_i_need_another_one);
 
-        std::cout << sect << "\n";
+        //std::cout << sect << "\n";
         for(auto& [k, v] : sect.key_value_pairs)
         {
             v = insert_variables(v, sect.key_value_pairs, out.palette); 

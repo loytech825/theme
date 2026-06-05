@@ -54,6 +54,7 @@ Options:
 |---|---|
 |-o \<output-dir>  | Override output directory|
 |-f \<file-name>   | Color config path|
+|--preview         | Prints the generated colors |
 
 ---
 

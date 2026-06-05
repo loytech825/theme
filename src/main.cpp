@@ -140,6 +140,7 @@ int main(int argc, char *argv[])
 
         //check if colors has a special section
         if(auto loc = std::find_if(colors.sections.begin(), colors.sections.end(), [&sect](const ConfigSection& int_sect){ return int_sect.name == sect.name; }); loc != colors.sections.end()) to_print = *loc;
+        else continue;
 
         if(sect.name != "default")
         {
@@ -240,6 +241,7 @@ void print_cfg(const ConfigSection& section_config, const ConfigSection& global_
     {
 
         //this will be the line to check for anything since we can remove whitespace and make life easier
+        if(line.empty()) { stream << "\n"; continue; }
         std::string check_line = line;
 
         //remove leading and trailing space

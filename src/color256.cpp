@@ -203,6 +203,25 @@ void print_256(const std::array<Color, 256> palette)
         G = std::clamp(G, 0, 255);
         B = std::clamp(B, 0, 255);
 
+        int BG_R = palette[0].x;
+        int BG_G = palette[0].y;
+        int BG_B = palette[0].z;
+
+        BG_R = std::clamp(BG_R, 0, 255);
+        BG_G = std::clamp(BG_G, 0, 255);
+        BG_B = std::clamp(BG_B, 0, 255);
+
+        int FG_R = palette[7].x;
+        int FG_G = palette[7].y;
+        int FG_B = palette[7].z;
+
+        FG_R = std::clamp(FG_R, 0, 255);
+        FG_G = std::clamp(FG_G, 0, 255);
+        FG_B = std::clamp(FG_B, 0, 255);
+
+        if( rgb2lab(palette[i]).x > 50 ) std::cout << "\033[38;2;" << BG_R << ";" << BG_G << ";" << BG_B << "m";
+        else                                 std::cout << "\033[38;2;" << FG_R << ";" << FG_G << ";" << FG_B << "m";
+
         //std::cout << "R: " << R << "G: " << G << "B: " << B << "\n"; 
         std::cout << "\033[48;2;" << R << ";" << G << ";" << B << "m" << id << " " << rgb2hex(palette[i]);
 
@@ -233,7 +252,24 @@ void print_256(const std::array<Color, 256> palette)
                 G = std::clamp(G, 0, 255);
                 B = std::clamp(B, 0, 255);
 
-                //std::cout << "R: " << R << "G: " << G << "B: " << B << "\n"; 
+                int BG_R = palette[0].x;
+                int BG_G = palette[0].y;
+                int BG_B = palette[0].z;
+
+                BG_R = std::clamp(BG_R, 0, 255);
+                BG_G = std::clamp(BG_G, 0, 255);
+                BG_B = std::clamp(BG_B, 0, 255);
+
+                int FG_R = palette[7].x;
+                int FG_G = palette[7].y;
+                int FG_B = palette[7].z;
+
+                FG_R = std::clamp(FG_R, 0, 255);
+                FG_G = std::clamp(FG_G, 0, 255);
+                FG_B = std::clamp(FG_B, 0, 255);
+
+                if( rgb2lab(palette[index]).x > 50 ) std::cout << "\033[38;2;" << BG_R << ";" << BG_G << ";" << BG_B << "m";
+                else                                 std::cout << "\033[38;2;" << FG_R << ";" << FG_G << ";" << FG_B << "m";
                 std::cout << "\033[48;2;" << R << ";" << G << ";" << B << "m" << id << " " << rgb2hex(palette[index]) << "\033[m  ";
             }
 
@@ -254,6 +290,25 @@ void print_256(const std::array<Color, 256> palette)
         R = std::clamp(R, 0, 255);
         G = std::clamp(G, 0, 255);
         B = std::clamp(B, 0, 255);
+
+        int BG_R = palette[0].x;
+        int BG_G = palette[0].y;
+        int BG_B = palette[0].z;
+
+        BG_R = std::clamp(BG_R, 0, 255);
+        BG_G = std::clamp(BG_G, 0, 255);
+        BG_B = std::clamp(BG_B, 0, 255);
+
+        int FG_R = palette[7].x;
+        int FG_G = palette[7].y;
+        int FG_B = palette[7].z;
+
+        FG_R = std::clamp(FG_R, 0, 255);
+        FG_G = std::clamp(FG_G, 0, 255);
+        FG_B = std::clamp(FG_B, 0, 255);
+
+        if( rgb2lab(palette[i]).x > 50 ) std::cout << "\033[38;2;" << BG_R << ";" << BG_G << ";" << BG_B << "m";
+        else                                 std::cout << "\033[38;2;" << FG_R << ";" << FG_G << ";" << FG_B << "m";
 
         //std::cout << "R: " << R << "G: " << G << "B: " << B << "\n"; 
         std::cout << "\033[48;2;" << R << ";" << G << ";" << B << "m " << i << " " << " " << rgb2hex(palette[i]) << "\033[m   ";
