@@ -78,7 +78,6 @@ void parse_line(const std::string& line, std::vector<ConfigSection>& sections)
     if(line.starts_with("#")) return;
     if(line.starts_with("\n")) return;
     if(line.empty()) return;
-
     
 
     //syntax for new section
@@ -100,12 +99,13 @@ void parse_line(const std::string& line, std::vector<ConfigSection>& sections)
 
     //skip whitespace
     int pos = line.find_first_not_of(" \t");
+    //std::cout << pos << " first nonwhite\n";
     
     if(line[pos] == '\n') return;
 
     //first word [stops at ' ', '\t' or '=']
     int start = pos;
-    pos = line.find_first_of(" \t=");
+    pos = line.find_first_of(" \t=", pos);
     std::string key = line.substr(start, pos-start);
     key = replace_all(key, "\\\"", "\"");
 
@@ -117,7 +117,9 @@ void parse_line(const std::string& line, std::vector<ConfigSection>& sections)
     //check for =
     if(line[pos] != '=')
     {
-        std::cout << line << ": Expected character \'=\' at pos " << pos << "\n";
+        std::cout << line << ": Expected character \'=\' at pos " << pos << "; Character found: " << line[pos] << "\n";
+        //for(int i = 0; i < line.length(); i++) std::cout << i << ": " << line[i] << "\n";
+        //std::cout << "\n\n\n";
         return;
     }
 
