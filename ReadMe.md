@@ -3,9 +3,14 @@
 S**ync** your **th**emes with a single file!
 
 Automatically generates theme files for all your programs. Provided the base 8 colors, it generates the entire 256 color pallete.
+Only the first 16 colors in the images are provided explicitly.
+
+<img src="images/catpuccin-mocha-generation-example.png" alt="Catpuccin Mocha Generation" width="400">
+<img src="images/gruvbox-light-generation-example.png" alt="Gruvbox Light Generation" width="400">
+
+Note the gradient is swapped since it interpolates from `background` (`color0`) to `foreground` (`color7`).
 
 ## Contents
-- [Contents](#contents)
 - [Pre-use setup](#pre-use-setup)
 - [Usage](#usage)
 - [Config](config.md)

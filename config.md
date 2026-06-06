@@ -13,6 +13,7 @@ These specify the behaviour of the parser. Any section created will generate an 
 |`comment`|The comment initialization string (eg. `--` in lua or `#` in python)|`#`|
 |`config_format`| Specifies what the output file will look like, see examples| too long to fit here, TBA |
 |`mode`| Can be either `modify-add` or `modify-ignore`. The former overrides keys `config_format` and adds anything remaining, the former ignores fields that are not in `config_format`|`modify-add`|
+|`defaults`| A string contaning default values in the same syntax as the config. These values are appended to colors from the color file, and can contain variables. If the color file specifies a color already defined as default, the default color will be overriden by the defined one.|
 
 Variables available
 

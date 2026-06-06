@@ -184,6 +184,47 @@ Palette generate_256(std::array<Color, 16> base16, Color bg, Color fg)
     return pallete;
 }
 
+void print_color(Color c, Color BG, Color FG)
+{
+
+    //if bag lighter than fg, we swap
+    if(rgb2lab(BG).x > rgb2lab(FG).x)
+    {
+        Color t = FG;
+        FG = BG;
+        BG = t;
+    }
+
+    int R = c.x;
+    int G = c.y;
+    int B = c.z;
+
+    R = std::clamp(R, 0, 255);
+    G = std::clamp(G, 0, 255);
+    B = std::clamp(B, 0, 255);
+
+    int BG_R = BG.x;
+    int BG_G = BG.y;
+    int BG_B = BG.z;
+
+    BG_R = std::clamp(BG_R, 0, 255);
+    BG_G = std::clamp(BG_G, 0, 255);
+    BG_B = std::clamp(BG_B, 0, 255);
+
+    int FG_R = FG.x;
+    int FG_G = FG.y;
+    int FG_B = FG.z;
+
+    FG_R = std::clamp(FG_R, 0, 255);
+    FG_G = std::clamp(FG_G, 0, 255);
+    FG_B = std::clamp(FG_B, 0, 255);
+
+    if( rgb2lab(c).x > 50 ) std::cout << "\033[38;2;" << BG_R << ";" << BG_G << ";" << BG_B << "m";
+    else                                 std::cout << "\033[38;2;" << FG_R << ";" << FG_G << ";" << FG_B << "m";
+
+    std::cout << "\033[48;2;" << R << ";" << G << ";" << B << "m";
+}
+
 void print_256(const std::array<Color, 256> palette)
 {
 
@@ -195,35 +236,9 @@ void print_256(const std::array<Color, 256> palette)
         //while(id.length() < 5) id = id+" ";
         while(id.length() < 3) id = " "+id;
 
-        int R = palette[i].x;
-        int G = palette[i].y;
-        int B = palette[i].z;
-
-        R = std::clamp(R, 0, 255);
-        G = std::clamp(G, 0, 255);
-        B = std::clamp(B, 0, 255);
-
-        int BG_R = palette[0].x;
-        int BG_G = palette[0].y;
-        int BG_B = palette[0].z;
-
-        BG_R = std::clamp(BG_R, 0, 255);
-        BG_G = std::clamp(BG_G, 0, 255);
-        BG_B = std::clamp(BG_B, 0, 255);
-
-        int FG_R = palette[7].x;
-        int FG_G = palette[7].y;
-        int FG_B = palette[7].z;
-
-        FG_R = std::clamp(FG_R, 0, 255);
-        FG_G = std::clamp(FG_G, 0, 255);
-        FG_B = std::clamp(FG_B, 0, 255);
-
-        if( rgb2lab(palette[i]).x > 50 ) std::cout << "\033[38;2;" << BG_R << ";" << BG_G << ";" << BG_B << "m";
-        else                                 std::cout << "\033[38;2;" << FG_R << ";" << FG_G << ";" << FG_B << "m";
-
+        print_color(palette[i], palette[0], palette[7]);
         //std::cout << "R: " << R << "G: " << G << "B: " << B << "\n"; 
-        std::cout << "\033[48;2;" << R << ";" << G << ";" << B << "m" << id << " " << rgb2hex(palette[i]);
+        std::cout << id << " " << rgb2hex(palette[i]);
 
         if(i == 7) std::cout << "\033[m\n";
     }
@@ -234,85 +249,40 @@ void print_256(const std::array<Color, 256> palette)
 
     for(int i = 0; i < 6; i++)
     {
-        for(int j = 0; j < 6; j++)
+        for(int j = 0; j < 7; j++)
         {
-            for(int k = 0; k < 6; k++)
+            //only draw first 6 lines
+            if((j+1) % 7 != 0)
             {
-                int index = 16 + (36 * i) + (6 * k) + j;
-                std::string id = std::to_string(index);
-                //while(id.length() < 5) id = id+" ";
-                while(id.length() < 3) id = " "+id;
-                while(id.length() < 5) id = id+" ";
+                for(int k = 0; k < 6; k++)
+                {
+                    int index = 16 + (36 * i) + (6 * k) + j;
+                    std::string id = std::to_string(index);
+                    //while(id.length() < 5) id = id+" ";
+                    while(id.length() < 3) id = " "+id;
+                    while(id.length() < 5) id = id+" ";
 
-                int R = palette[index].x;
-                int G = palette[index].y;
-                int B = palette[index].z;
-
-                R = std::clamp(R, 0, 255);
-                G = std::clamp(G, 0, 255);
-                B = std::clamp(B, 0, 255);
-
-                int BG_R = palette[0].x;
-                int BG_G = palette[0].y;
-                int BG_B = palette[0].z;
-
-                BG_R = std::clamp(BG_R, 0, 255);
-                BG_G = std::clamp(BG_G, 0, 255);
-                BG_B = std::clamp(BG_B, 0, 255);
-
-                int FG_R = palette[7].x;
-                int FG_G = palette[7].y;
-                int FG_B = palette[7].z;
-
-                FG_R = std::clamp(FG_R, 0, 255);
-                FG_G = std::clamp(FG_G, 0, 255);
-                FG_B = std::clamp(FG_B, 0, 255);
-
-                if( rgb2lab(palette[index]).x > 50 ) std::cout << "\033[38;2;" << BG_R << ";" << BG_G << ";" << BG_B << "m";
-                else                                 std::cout << "\033[38;2;" << FG_R << ";" << FG_G << ";" << FG_B << "m";
-                std::cout << "\033[48;2;" << R << ";" << G << ";" << B << "m" << id << " " << rgb2hex(palette[index]) << "\033[m  ";
+                    print_color(palette[index], palette[0], palette[7]);
+                    std::cout << id << " " << rgb2hex(palette[index]) << "\033[m  ";
+                }
             }
-
-            //std::cout << "\033[m     "; 
+            else
+            {
+                std::cout << "\t\t\t\t\t\t\t\t\t\t";
+            }
+            //grayscale at the end
+            int idx = 7*i+j;
+            if(idx < 25)
+            {
+                if(idx == 0) { std::cout << "\033[m\tGrayscale:\n"; continue; }
+                idx+=231;
+                print_color(palette[idx], palette[0], palette[7]);
+                //std::cout << "R: " << R << "G: " << G << "B: " << B << "\n"; 
+                std::cout << "\t" << idx << " " << " " << rgb2hex(palette[idx]) << "\033[m\n";
+                //if(j==5) std::cout << "\033[m\n";
+                continue;
+            }
             std::cout << "\033[m\n";
         }
-        std::cout << "\033[m\n";
     }
-
-    std::cout << "\nGrayscale: \n";
-
-    for(int i = 232; i < 256; i++)
-    {
-        int R = palette[i].x;
-        int G = palette[i].y;
-        int B = palette[i].z;
-
-        R = std::clamp(R, 0, 255);
-        G = std::clamp(G, 0, 255);
-        B = std::clamp(B, 0, 255);
-
-        int BG_R = palette[0].x;
-        int BG_G = palette[0].y;
-        int BG_B = palette[0].z;
-
-        BG_R = std::clamp(BG_R, 0, 255);
-        BG_G = std::clamp(BG_G, 0, 255);
-        BG_B = std::clamp(BG_B, 0, 255);
-
-        int FG_R = palette[7].x;
-        int FG_G = palette[7].y;
-        int FG_B = palette[7].z;
-
-        FG_R = std::clamp(FG_R, 0, 255);
-        FG_G = std::clamp(FG_G, 0, 255);
-        FG_B = std::clamp(FG_B, 0, 255);
-
-        if( rgb2lab(palette[i]).x > 50 ) std::cout << "\033[38;2;" << BG_R << ";" << BG_G << ";" << BG_B << "m";
-        else                                 std::cout << "\033[38;2;" << FG_R << ";" << FG_G << ";" << FG_B << "m";
-
-        //std::cout << "R: " << R << "G: " << G << "B: " << B << "\n"; 
-        std::cout << "\033[48;2;" << R << ";" << G << ";" << B << "m " << i << " " << " " << rgb2hex(palette[i]) << "\033[m   ";
-        std::cout << "\033[m\n";
-    }
-
 }
