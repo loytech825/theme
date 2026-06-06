@@ -8,7 +8,7 @@ Only the first 16 colors in the images are provided explicitly.
 <img src="images/catpuccin-mocha-generation-example.png" alt="Catpuccin Mocha Generation" width="400">
 <img src="images/gruvbox-light-generation-example.png" alt="Gruvbox Light Generation" width="400">
 
-Note the gradient is swapped since it interpolates from `background` (`color0`) to `foreground` (`color7`).
+Note the gradient is swapped since it interpolates from `color0` (`background`) to `color7` (`foreground`). If you specify `color0` and `color7`, those will be used instead of `background` and `foreground`.
 
 ## Contents
 - [Pre-use setup](#pre-use-setup)

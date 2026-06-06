@@ -135,6 +135,13 @@ Palette generate_256(std::array<Color, 16> base16, Color bg, Color fg)
 {
     std::array<Color, 8> base_8_lab;
 
+    if(rgb2lab(bg).x > rgb2lab(fg).x)
+    {
+        Color t = bg;
+        bg = fg;
+        fg = t;
+    }
+
     //convert first 8 colors to LAB
     for(int i = 0; i < 7; i++) { base_8_lab.at(i) = rgb2lab(base16.at(i)); }
 
