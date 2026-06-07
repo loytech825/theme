@@ -75,7 +75,7 @@ int main(int argc, char *argv[])
     //check if arguments parse successfully
     if(parse_arguments(argc, argv)) return -1;
 
-    if(color_file.empty()) { std::cout << "No file provided!\nDo theme -h for help\n"; return -1; }
+    if(color_file.empty()) { std::cout << "No file provided!\nDo thync -h for help\n"; return -1; }
     
     //TODO verbose?
     //std::cout << "Parsing file " << fs::absolute(color_file) << "\n";

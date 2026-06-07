@@ -57,7 +57,7 @@ inline const std::string COLORS[] {
 inline const std::string HELP{
 
     "Usage\n\n"
-    "\ttheme [options] <color-file-name> <output-dir>\n\n"
+    "\tthync [options] <color-file-name> <output-dir>\n\n"
     "First argument that doesn't belong to any option goes to <color-file-name>, the second\n"
     "to <output-dir>. <output-dir> defaults to local config folder, checks performed in order: \n"
     "\t$XDG_CONFIG_HOME\n"
