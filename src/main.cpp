@@ -81,6 +81,9 @@ int main(int argc, char *argv[])
     //std::cout << "Parsing file " << fs::absolute(color_file) << "\n";
     //std::cout << "Output directory " << fs::absolute(output_dir) << "\n";
 
+    output_dir = fs::absolute(fs::path(output_dir)).lexically_normal();
+    color_file = fs::absolute(fs::path(color_file)).lexically_normal();
+
 
     fs::path config_dir{get_config_dir()};
     fs::path config_path{config_dir / APP_NAME / "config.conf"};
@@ -101,7 +104,7 @@ int main(int argc, char *argv[])
     config.global = config_vec.at(0);
     config.sections.insert(config.sections.begin(), config_vec.begin()+1, config_vec.end());
 
-    process_config(config, output_dir, config_dir);
+    process_config(config, output_dir, config_dir.lexically_normal());
 
 
 
@@ -211,6 +214,14 @@ int main(int argc, char *argv[])
             print_cfg(sect, colors.global, to_print, colors.palette, file);
             file.close();
         }
+    }
+
+    //execute post command
+    if(config.global.key_value_pairs.contains("post-cmd"))
+    {
+        int exit = std::system(config.global.key_value_pairs.at("post-cmd").c_str());
+        //std::cout << config.global.key_value_pairs.at("post-cmd") << "\n";
+        if(exit) std::cout << "Post execution command failed! " << exit << "\n";
     }
 }
 

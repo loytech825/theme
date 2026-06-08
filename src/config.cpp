@@ -14,7 +14,17 @@
 */
 void process_config(Config& config, const std::string& output_dir, const std::string& config_dir)
 {
-    
+    //parse all that can be parsed here
+    for(auto& [k, v] : config.global.key_value_pairs)
+    {
+        if(k == "post-cmd")
+        {
+            v = replace_all(v, "${section_name}", config.global.name);
+        }
+        v = replace_all(v, "${config_dir}", config_dir);
+        v = replace_all(v, "${output_dir}", output_dir);
+    }
+
     for(auto& section_config : config.sections)
     {
         
@@ -46,7 +56,7 @@ void process_config(Config& config, const std::string& output_dir, const std::st
         {
             auto& v = pair.second;
             v = replace_all(v, "${section_name}", section_config.name);
-            v = replace_all(v, "${config_dir}", section_config.name);
+            v = replace_all(v, "${config_dir}", config_dir);
             v = replace_all(v, "${output_dir}", output_dir);
         }
 
