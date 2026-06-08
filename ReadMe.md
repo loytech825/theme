@@ -49,8 +49,8 @@ path = "path/to/hprland-colors.lua"
 
 `thync [options] <color-file-name> <output-dir>`
 
-First argument that doesn't belong to any option goes to \<color-file-name>, the second to \<output-dir>. \<output-dir> defaults to local config folder, checks are performed in order:
- 1. XDG_CONFIG_HOME
+First argument that doesn't belong to any option goes to `<color-file-name>`, the second to `<output-dir>`. `<output-dir>` defaults to local config folder, checks are performed in order:
+ 1. $XDG_CONFIG_HOME
  2. $HOME/.config
 
 Options:
