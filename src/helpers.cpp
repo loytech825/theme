@@ -180,6 +180,13 @@ std::string insert_variables(const std::string &input, const std::unordered_map<
         int id = get_color_id(v_name);
         if(id != -1) var_name = std::to_string(id);
         
+        //std::cout << var_name << "\n";
+
+        /*TODO: HERE ALL VARIABLES ARE TRANSLATED INTO CODES
+        SO IF WE HAVE SOMETHING LKE main4, main here would be an ID so main4 can be processed according to that id
+        
+        */
+
         //first check the variable source
         if(variables_source.contains(var_name)) { out_line = replace_all(out_line, "${"+v_name+"}", variables_source.at(var_name)); }
 
