@@ -184,12 +184,7 @@ ColorConfig process_colors(std::vector<ConfigSection> config)
     { 
         auto& sect = *it;
 
-        //this is needed to make sure local variables are checked first
-        //also this works cuz global_map is a copy
-        auto why_do_i_need_another_one = global_map;
-        sect.key_value_pairs.merge(why_do_i_need_another_one);
-
-        //std::cout << sect << "\n";
+        //globals and defaults merged already
         for(auto& [k, v] : sect.key_value_pairs)
         {
             v = insert_variables(v, sect.key_value_pairs, out.palette); 

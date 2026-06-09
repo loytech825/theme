@@ -23,63 +23,12 @@ int parse_arguments(const int argc, char* argv[]);
 
 int main(int argc, char *argv[])
 {
-
-    /*std::array<Color, 16> colors {
-        /*Color{0, 0, 0},
-        Color{128, 0, 0},
-        Color{0, 128, 0},
-        Color{128, 128, 0},
-        Color{0, 0, 128},
-        Color{128, 0, 128},
-        Color{0, 128, 128},
-        Color{192, 192, 192},
-        Color{128, 128, 128},
-        Color{255, 0, 0},
-        Color{0, 255, 0},
-        Color{255, 255, 0},
-        Color{0, 0, 255},
-        Color{255, 0, 255},
-        Color{0, 255, 255},
-        Color{255, 255, 255}
-
-        hex2rgb("282828"),
-        hex2rgb("cc241d"),
-        hex2rgb("98971a"),
-        hex2rgb("d79921"),
-        hex2rgb("458588"),
-        hex2rgb("b16286"),
-        hex2rgb("689d6a"),
-        hex2rgb("a89984"),
-        
-        hex2rgb("928374"),
-        hex2rgb("fb4934"),
-        hex2rgb("b8bb26"),
-        hex2rgb("fabd2f"),
-        hex2rgb("83a598"),
-        hex2rgb("d3869b"),
-        hex2rgb("8ec07c"),
-        hex2rgb("ebdbb2"),
-
-    };
-
-    print_256(generate_256(colors, colors[0], colors[15]));
-
-
-    return 0;*/
-
-    /*std::cout << hex2rgb("00ff05") << "\n";
-    std::cout << rgb2hex(hex2rgb("00ff05")) << "\n";
-
-    return 0;*/
-
     //check if arguments parse successfully
     if(parse_arguments(argc, argv)) return -1;
 
     if(color_file.empty()) { std::cout << "No file provided!\nDo thync -h for help\n"; return -1; }
     
     //TODO verbose?
-    //std::cout << "Parsing file " << fs::absolute(color_file) << "\n";
-    //std::cout << "Output directory " << fs::absolute(output_dir) << "\n";
 
     output_dir = fs::absolute(fs::path(output_dir)).lexically_normal();
     color_file = fs::absolute(fs::path(color_file)).lexically_normal();
@@ -159,12 +108,20 @@ int main(int argc, char *argv[])
     //here we insert defaults if present
     for(auto& color_sect : config_colors)
     {
+        //first merge globals before merging defaults
+        //otherwise default overrides global
+        auto WHY = config_colors.at(0).key_value_pairs;
+        color_sect.key_value_pairs.merge(WHY);
+
         if(auto it = std::find_if(defaults.begin(), defaults.end(), [&color_sect](const ConfigSection& cfg){ return cfg.name == color_sect.name;}); 
         it != defaults.end())
         {
            //std::cout << "found defaults for " << it->name << "\n";
+           
            color_sect.key_value_pairs.merge(it->key_value_pairs);
         }
+
+        //std::cout << color_sect << "\n";
     }
     
 
@@ -173,9 +130,6 @@ int main(int argc, char *argv[])
     ColorConfig colors = process_colors(config_colors);
 
     if(preview) { print_256(colors.palette); std::cout << "\n\n"; return 0; }
-
-
-
 
 
 
