@@ -5,3 +5,4 @@
 - `file` field - instead of generating a color file, it just copies it over (ex. if a theme for a program already exists)
 - Better color parsing (RGB, RGBA)
 - Color variable indexing (eg. green0-16...), if we have a variable like `primary = green` then `primary4` should be a different shade.
+- Section parameters (eg. style -> if multiple themes are the same but use a minor difference eg. a different accent color, you can specify styles)
