@@ -14,7 +14,7 @@ These specify the behaviour of the parser. Any section created will generate an 
 |`config_format`| Specifies what the output file will look like, see examples| too long to fit here, TBA |
 |`mode`| Can be either `modify-add` or `modify-ignore`. The former overrides keys `config_format` and adds anything remaining, the former ignores fields that are not in `config_format`|`modify-add`|
 |`defaults`| A string contaning default values in the same syntax as the config. These values are appended to colors from the color file, and can contain variables. If the color file specifies a color already defined as default, the default color will be overriden by the defined one.|
-|`post-cmd`| A bash command to run after running the app (made so you can make a reload script and it gets called automatically)|
+|`post_cmd`| A bash command to run after running the app (made so you can make a reload script and it gets called automatically)|
 
 Variables available
 

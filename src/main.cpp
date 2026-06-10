@@ -171,9 +171,9 @@ int main(int argc, char *argv[])
     }
 
     //execute post command
-    if(config.global.key_value_pairs.contains("post-cmd"))
+    if(config.global.key_value_pairs.contains("post_cmd"))
     {
-        int exit = std::system(config.global.key_value_pairs.at("post-cmd").c_str());
+        int exit = std::system(config.global.key_value_pairs.at("post_cmd").c_str());
         //std::cout << config.global.key_value_pairs.at("post-cmd") << "\n";
         if(exit) std::cout << "Post execution command failed! " << exit << "\n";
     }
@@ -227,7 +227,7 @@ void print_cfg(const ConfigSection& section_config, const ConfigSection& global_
     std::string id_format = section_config.key_value_pairs.at("format_id");
     std::string comment = section_config.key_value_pairs.at("comment");
     std::string config_format = section_config.key_value_pairs.at("config_format");
-
+    
     //whether to modify-add or modify-ignore existing values in the config
     std::string mode = section_config.key_value_pairs.at("mode");
 

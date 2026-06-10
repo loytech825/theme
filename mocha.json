@@ -380,7 +380,7 @@
     "tab.activeForeground": "#${color13}",
     "tab.activeModifiedBorder": "#${color3}",
     "tab.border": "#${bg1}",
-    "tab.hoverBackground": "#28283d",
+    "tab.hoverBackground": "#${bg5}",
     "tab.hoverBorder": "#00000000",
     "tab.hoverForeground": "#${color13}",
     "tab.inactiveBackground": "#${bg1}",
