@@ -1,0 +1,32 @@
+[
+{
+  "directory": "/home/matic-bratina/code/thync/build",
+  "command": "/usr/bin/c++  -I/home/matic-bratina/code/thync/include -std=gnu++20 -o CMakeFiles/thync.dir/src/color256.cpp.o -c /home/matic-bratina/code/thync/src/color256.cpp",
+  "file": "/home/matic-bratina/code/thync/src/color256.cpp",
+  "output": "CMakeFiles/thync.dir/src/color256.cpp.o"
+},
+{
+  "directory": "/home/matic-bratina/code/thync/build",
+  "command": "/usr/bin/c++  -I/home/matic-bratina/code/thync/include -std=gnu++20 -o CMakeFiles/thync.dir/src/config.cpp.o -c /home/matic-bratina/code/thync/src/config.cpp",
+  "file": "/home/matic-bratina/code/thync/src/config.cpp",
+  "output": "CMakeFiles/thync.dir/src/config.cpp.o"
+},
+{
+  "directory": "/home/matic-bratina/code/thync/build",
+  "command": "/usr/bin/c++  -I/home/matic-bratina/code/thync/include -std=gnu++20 -o CMakeFiles/thync.dir/src/config_parser.cpp.o -c /home/matic-bratina/code/thync/src/config_parser.cpp",
+  "file": "/home/matic-bratina/code/thync/src/config_parser.cpp",
+  "output": "CMakeFiles/thync.dir/src/config_parser.cpp.o"
+},
+{
+  "directory": "/home/matic-bratina/code/thync/build",
+  "command": "/usr/bin/c++  -I/home/matic-bratina/code/thync/include -std=gnu++20 -o CMakeFiles/thync.dir/src/helpers.cpp.o -c /home/matic-bratina/code/thync/src/helpers.cpp",
+  "file": "/home/matic-bratina/code/thync/src/helpers.cpp",
+  "output": "CMakeFiles/thync.dir/src/helpers.cpp.o"
+},
+{
+  "directory": "/home/matic-bratina/code/thync/build",
+  "command": "/usr/bin/c++  -I/home/matic-bratina/code/thync/include -std=gnu++20 -o CMakeFiles/thync.dir/src/main.cpp.o -c /home/matic-bratina/code/thync/src/main.cpp",
+  "file": "/home/matic-bratina/code/thync/src/main.cpp",
+  "output": "CMakeFiles/thync.dir/src/main.cpp.o"
+}
+]
