@@ -1,6 +1,9 @@
 #include "helpers.h"
 #include <exception>
+#include <filesystem>
+#include <fstream>
 #include <pwd.h>
+#include <string>
 #include <unistd.h>
 #include <iostream>
 
@@ -146,8 +149,55 @@ std::string insert_variables(const std::string& input, const std::unordered_map<
 
         //std::cout << v_name << ", " << var_name << "\n";
     }
+    return out_line;
+}
+
+
+std::string insert_variables(const std::string& input, const std::filesystem::path& file_search_dir)
+{
+
+    std::string out_line = input;
+
+    //replace files
+
+    int begin = 0;
+    while(true)
+    {
+        begin = out_line.find("f{", begin);
+        if(begin == std::string::npos) break;
+
+        //std::cout << out_line << "\n";
+        //loop through closing brackets until one right after the opening is found
+        int end = out_line.find("}", begin+2);
+        if(end == std::string::npos) continue;
+
+        //holds whats between ${ and }
+        std::string f_name = out_line.substr(begin+2, end-begin-2);
+        
+        auto file_to_insert = file_search_dir / f_name;
+
+        if(std::filesystem::exists(file_to_insert) && !std::filesystem::is_directory(file_to_insert))
+        {
+            std::ifstream config_file{file_to_insert};
+            
+            auto size = std::filesystem::file_size(file_to_insert);
+            std::string content(size, '\0');
+            config_file.read(&content[0], size);
+            config_file.close();
+
+            out_line = replace_all(out_line, "f{"+f_name+"}", content);
+        }
+        else
+        {
+            std::cout << "Couldn't insert file " << file_to_insert.lexically_normal() << "\n";
+        }
+        
+        if(++begin > out_line.length()) break;
+
+    }
 
     return out_line;
+
 }
 
 std::string insert_variables(const std::string &input, const std::unordered_map<std::string, std::string> &variables_source, Palette gen_colors)

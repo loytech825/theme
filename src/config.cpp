@@ -59,15 +59,16 @@ void process_config(Config& config, const std::string& output_dir, const std::st
             v = replace_all(v, "${config_dir}", config_dir);
             v = replace_all(v, "${output_dir}", output_dir);
         }
-
         //replaces variables
         for(auto& [k, v] : section_config.key_value_pairs){
 
 
-            if(k == "format" || k == "format_id" || k == "config_format") continue;
+            if(k == "format" || k == "format_id" || k == "config_format") { v = insert_variables(v, std::filesystem::path(config_dir) / "thync"); }
+            else    { v = insert_variables(v, section_config.key_value_pairs); }
 
-            v = insert_variables(v, section_config.key_value_pairs);
+            
         }
+        // NEED TI ADD FILE INSERTION
     }
 }
 

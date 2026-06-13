@@ -28,3 +28,11 @@ std::string insert_variables(const std::string& input, const std::unordered_map<
     @param gen_colors a Palette of colors if `variable_source` doesn't have a variable
 */
 std::string insert_variables(const std::string& input, const std::unordered_map<std::string, std::string>& variables_source, Palette gen_colors);
+
+/*
+ *
+ * @brief Inserts and files
+ *
+ */
+
+std::string insert_variables(const std::string& input, const std::filesystem::path& file_search_dir);

@@ -7,6 +7,7 @@
 #include "helpers.h"
 #include "color256.h"
 #include <cstring>
+#include <unordered_map>
 
 
 /*Global settings*/
@@ -39,7 +40,15 @@ int main(int argc, char *argv[])
 
     create_conf(config_path);
 
+    /*
+     *
+     * Test area
+     *
+     */
 
+
+
+    //return 0;
     /*
         CONFIG FILE PARSING
     */
@@ -53,11 +62,8 @@ int main(int argc, char *argv[])
     config.global = config_vec.at(0);
     config.sections.insert(config.sections.begin(), config_vec.begin()+1, config_vec.end());
 
-    process_config(config, output_dir, config_dir.lexically_normal());
-
-
-
-
+    
+    process_config(config, output_dir, config_dir);
 
 
     //check if defaults exist for each section

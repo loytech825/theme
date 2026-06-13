@@ -4,3 +4,6 @@ build/
 test
 out
 test*
+vim-conf.conf
+vim-test.conf
+catpuccin-mocha.vim

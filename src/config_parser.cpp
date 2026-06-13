@@ -111,7 +111,7 @@ void parse_line(const std::string& line, std::vector<ConfigSection>& sections)
 
 
     //whitespace 2
-    //pos++;
+    //pos++;ciauto.test_section
     pos = line.find_first_not_of(" \t", pos); //while(line[pos] == ' ' || line[pos] == '\t') pos++;
 
     //check for =
